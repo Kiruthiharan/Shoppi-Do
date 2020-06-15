@@ -1,8 +1,12 @@
 import 'react-native-gesture-handler';
+import { enableScreens} from 'react-native-screens';
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 
 import ListNavigator from './navigation/ListNavigator'
+
+// improves performance of screen navs 
+enableScreens();
 
 const App = () => {
   return (
