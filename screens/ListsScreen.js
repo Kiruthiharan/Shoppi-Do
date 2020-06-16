@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, FlatList} from 'react-native';
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import HeaderButton from '../components/HeaderButton';
 
 import {LISTS} from '../data/dummy-data';
 
@@ -25,8 +27,15 @@ function ListsScreen(props) {
 }
 
 // optional for like setting heeaders
-ListsScreen.navigationOptions = {
-  headerTitle: 'Shopping Lists',
+ListsScreen.navigationOptions = (navigationData) => {
+  return {
+    headerTitle: 'Shopping Lists',
+    headerLeft:() => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item title="Fav" iconName="navicon" onPress={() => {navigationData.navigation.toggleDrawer()}} />
+      </HeaderButtons>
+    ),
+  };
 };
 
 const styles = StyleSheet.create({

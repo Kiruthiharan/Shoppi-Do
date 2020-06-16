@@ -27,6 +27,7 @@ ListDetailScreen.navigationOptions = navigationData => {
         <Item title="Fav" iconName="rocket" onPress={() => {}} />
       </HeaderButtons>
     ),
+    
   };
 };
 
