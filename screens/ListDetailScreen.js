@@ -22,7 +22,7 @@ ListDetailScreen.navigationOptions = navigationData => {
 
   return {
     headerTitle: selectedList.title,
-    headerRight: (
+    headerRight:() => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title="Fav" iconName="rocket" onPress={() => {}} />
       </HeaderButtons>

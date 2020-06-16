@@ -3,14 +3,14 @@ import { enableScreens} from 'react-native-screens';
 import React from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 
-import ListNavigator from './navigation/ListNavigator'
+import AppNavigator from './navigation/AppNavigator'
 
 // improves performance of screen navs 
 enableScreens();
 
 const App = () => {
   return (
-    <ListNavigator />
+    <AppNavigator />
   );
 };
 
