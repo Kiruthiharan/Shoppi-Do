@@ -6,7 +6,7 @@ import Colors from '../constants/Colors';
 const FAB = props => {
   return (
     <TouchableOpacity style={styles.TouchableOpacityStyle} {...props} >
-      <Icon name="plus" color="white" size={30}/>
+      <Icon name={props.name} color="white" size={30}/>
     </TouchableOpacity>
   );
 };

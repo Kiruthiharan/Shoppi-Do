@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {
+  CheckBox,
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from 'react-native';
 import {LISTS} from '../data/dummy-data';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -8,10 +15,19 @@ function ListDetailScreen(props) {
   const listId = props.navigation.getParam('listId');
 
   const selectedList = LISTS.find(list => list.id === listId);
+
+  const renderListItem = itemData => {
+    return (
+      <TouchableOpacity style={styles.item} activeOpacity={0.7} onPress={() => {}}>
+          <CheckBox value={true} onValueChange={() => {}} />
+          <Text style={styles.title}>{itemData.item.title}</Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View>
-      <Text>List Detail</Text>
-      <Text>{selectedList.title}</Text>
+      <FlatList data={LISTS} renderItem={renderListItem} numColumns={1} />
     </View>
   );
 }
@@ -22,15 +38,22 @@ ListDetailScreen.navigationOptions = navigationData => {
 
   return {
     headerTitle: selectedList.title,
-    headerRight:() => (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item title="Fav" iconName="rocket" onPress={() => {}} />
       </HeaderButtons>
     ),
-    
   };
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  item: {
+    flex: 1,
+    flexDirection: 'row',
+    borderWidth: 0.5,
+    margin:5,
+    alignItems: 'center'
+  }
+});
 
 export default ListDetailScreen;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {createRef} from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,8 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   FlatList,
-  Alert,
+  TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -17,35 +18,46 @@ import {Colors} from '../constants/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/Feather';
+import ActionSheet from 'react-native-actions-sheet';
+
+const actionSheetRef = createRef();
+
+function RenderAddList(props) {
+  return (
+    <KeyboardAvoidingView behavior="position" >
+      <View style={styles.addList}>
+        <FAB name="x" />
+        <TextInput>Hello</TextInput>
+      </View>
+    </KeyboardAvoidingView>
+  );
+}
 
 function ListsScreen(props) {
   const leftContent = <Text>Pull to activate</Text>;
 
   const rightButtons = [
     <TouchableHighlight style={styles.slideIcon}>
-      <Icon name="delete" size={25}/>
+      <Icon name="delete" size={25} />
     </TouchableHighlight>,
     <TouchableHighlight style={styles.slideIcon}>
-      <Icon name="edit" size={25}/>
+      <Icon name="edit" size={25} />
     </TouchableHighlight>,
   ];
 
   const renderGridItem = itemData => {
     return (
-      <Swipeable
-        leftContent={leftContent}
-        rightButtons={rightButtons}>
+      <Swipeable leftContent={leftContent} rightButtons={rightButtons}>
         <TouchableOpacity
-        activeOpacity ={0.7}
-        onPress={() => {
-          props.navigation.navigate({
-            routeName: 'ListDetail',
-            params: {
-              listId: itemData.item.id
-            }
-          });
-        }}
-          >
+          activeOpacity={0.7}
+          onPress={() => {
+            props.navigation.navigate({
+              routeName: 'ListDetail',
+              params: {
+                listId: itemData.item.id,
+              },
+            });
+          }}>
           <LinearGradient
             colors={['#39A1F7', '#718BFB', '#A875FF']}
             style={styles.linearGradient}>
@@ -58,15 +70,19 @@ function ListsScreen(props) {
       </Swipeable>
     );
   };
-
+  let actionSheet;
   return (
-    <View style={styles.root}>
+    <View behavior="position"  style={styles.root}>
       <FlatList data={LISTS} renderItem={renderGridItem} numColumns={1} />
       <FAB
+        name="plus"
         onPress={() => {
-          Alert.alert('Hello');
+          actionSheetRef.current?.setModalVisible();
         }}
       />
+      <ActionSheet ref={actionSheetRef} keyboardShouldPersistTaps="never">
+        <RenderAddList />
+      </ActionSheet>
     </View>
   );
 }
@@ -102,7 +118,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     margin: 15,
     height: 100,
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   title: {
     fontWeight: 'bold',
@@ -117,8 +133,10 @@ const styles = StyleSheet.create({
   },
   slideIcon: {
     top: 50,
-    
-  }
+  },
+  addList: {
+    alignItems: 'center',
+  },
 });
 
 export default ListsScreen;
