@@ -82,18 +82,27 @@ function ListsScreen(props) {
     return <Text>Aasd</Text>;
   }
 
+  const deleteItem = id => {
+    dbRef
+      .doc(id)
+      .delete()
+      .then(() => console.log('deleted'));
+  };
+
   const leftContent = <Text>Pull to activate</Text>;
 
-  const rightButtons = [
-    <TouchableHighlight style={styles.slideIcon}>
-      <Icon name="delete" size={25} />
-    </TouchableHighlight>,
-    <TouchableHighlight style={styles.slideIcon}>
-      <Icon name="edit" size={25} />
-    </TouchableHighlight>,
-  ];
-
   const renderGridItem = itemData => {
+    const rightButtons = [
+      <TouchableHighlight
+        style={styles.slideIcon}
+        onPress={() => deleteItem(itemData.item.id)}>
+        <Icon name="delete" size={25} />
+      </TouchableHighlight>,
+      <TouchableHighlight style={styles.slideIcon}>
+        <Icon name="edit" size={25} />
+      </TouchableHighlight>,
+    ];
+
     return (
       <Swipeable leftContent={leftContent} rightButtons={rightButtons}>
         <TouchableOpacity
@@ -120,7 +129,10 @@ function ListsScreen(props) {
   };
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={styles.root} keyboardVerticalOffset={-300}>
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={styles.root}
+      keyboardVerticalOffset={-300}>
       <TextInput value={enteredList} onChangeText={handleListName} />
       <Button title="Add" onPress={addList} />
       <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />

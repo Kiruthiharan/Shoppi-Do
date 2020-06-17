@@ -79,18 +79,25 @@ function ListDetailScreen(props) {
     setItem('');
   };
 
-  const toggleDone = (value) => {
-    console.log(value);
+  const toggleDone = (id, status) => {
+    console.log(id, status);
     
-  }
+    // dbRef
+    // .collection('items').doc(id).update({
+    //   done: !status
+    // })
+  };
 
   const renderListItem = itemData => {
     return (
       <TouchableOpacity
         style={styles.item}
         activeOpacity={0.7}
-        onPress={() => {}}>
-        <CheckBox value={itemData.item.done} onValueChange={toggleDone} />
+        onPress = {() => toggleDone(itemData.item.id, itemData.item.done)}>
+        <CheckBox
+          value={itemData.item.done}
+          onPress = {() => toggleDone(itemData.item.id, itemData.item.done)}
+        />
         <Text style={styles.title}>{itemData.item.name}</Text>
       </TouchableOpacity>
     );
