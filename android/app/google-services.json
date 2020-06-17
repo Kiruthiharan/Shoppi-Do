@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "464966296132",
+    "firebase_url": "https://shoppi-do.firebaseio.com",
+    "project_id": "shoppi-do",
+    "storage_bucket": "shoppi-do.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464966296132:android:060768b685e2406e00d211",
+        "android_client_info": {
+          "package_name": "com.shoppido"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464966296132-apir6r65vlb74875pfkcjh83a6tomrd9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shoppido",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "464966296132-tgso1rv183rfg6in1mv8t8r4p8r15sd9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl6Yt1D4bALHtl4kGrFPbxpmruOelNB94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464966296132-tgso1rv183rfg6in1mv8t8r4p8r15sd9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

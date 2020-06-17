@@ -1,5 +1,5 @@
 import React from 'react';
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
@@ -7,6 +7,8 @@ import {Platform} from 'react-native';
 import ListsScreen from '../screens/ListsScreen';
 import ListDetailScreen from '../screens/ListDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -70,12 +72,34 @@ const TabNavigator = createBottomTabNavigator(
   },
 );
 
-const MainNavigator = createDrawerNavigator({
+const HomeNavigator = createDrawerNavigator({
   Profile: {
     screen: TabNavigator
   },
   List: {
     screen: ListNavigator
+  }
+})
+
+
+const AuthNavigator = createStackNavigator({
+  Login: {
+    screen: LoginScreen
+  },
+  Register: {
+    screen: RegisterScreen
+  }
+},{
+  defaultNavigationOptions: {
+    headerShown: false
+  }
+})
+const MainNavigator = createSwitchNavigator({
+  Auth: {
+    screen: AuthNavigator
+  },
+  Home: {
+    screen: HomeNavigator
   }
 })
 

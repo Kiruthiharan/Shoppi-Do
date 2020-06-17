@@ -1,4 +1,4 @@
-import React, {createRef} from 'react';
+import React, {createRef, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,12 @@ import {
   FlatList,
   TextInput,
   KeyboardAvoidingView,
+  Button,
+  ScrollView,
 } from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
-import FAB from '../components/FAB';
+import FAB from '../components/UI/FAB';
 
 import {LISTS} from '../data/dummy-data';
 import {Colors} from '../constants/Colors';
@@ -20,20 +22,59 @@ import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actions-sheet';
 
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import List from '../models/list';
+
+const usersCollection = firestore().collection('Lists');
 const actionSheetRef = createRef();
 
 function RenderAddList(props) {
   return (
-    <KeyboardAvoidingView behavior="position" >
-      <View style={styles.addList}>
-        <FAB name="x" />
-        <TextInput>Hello</TextInput>
-      </View>
-    </KeyboardAvoidingView>
+    <ScrollView>
+      <FAB name="x" />
+      <TextInput>Hello</TextInput>
+    </ScrollView>
   );
 }
+const user = auth().currentUser;
+const listArray = [];
+function onResult(querySnapshot) {
+  console.log(querySnapshot);
+  querySnapshot.forEach(documentSnapshot => {
+    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data().name);
+    const single = new List(documentSnapshot.id, documentSnapshot.data().name, 'red');
+    listArray.push(single)
+  });
+}
+
+function onError(error) {
+  console.error(error);
+}
+
+firestore()
+  .collection('users').doc(user.uid).collection('Lists')
+  .onSnapshot(onResult, onError);
 
 function ListsScreen(props) {
+  const [enteredList, setEnteredList] = useState('');
+
+  const handleListName = listName => {
+    setEnteredList(listName);
+  };
+
+  const addNewList = () => {
+    console.log(enteredList);
+    firestore()
+      .collection('users').doc(user.uid).collection('Lists')
+      .add({
+        name: enteredList
+      })
+      .then(() => {
+        console.log('User added!');
+      });
+  };
+
   const leftContent = <Text>Pull to activate</Text>;
 
   const rightButtons = [
@@ -70,10 +111,14 @@ function ListsScreen(props) {
       </Swipeable>
     );
   };
-  let actionSheet;
   return (
-    <View behavior="position"  style={styles.root}>
-      <FlatList data={LISTS} renderItem={renderGridItem} numColumns={1} />
+    <KeyboardAvoidingView
+      behavior="padding"
+      style={styles.root}
+      keyboardVerticalOffset={-300}>
+      <TextInput value={enteredList} onChangeText={handleListName} />
+      <Button title="Add" onPress={addNewList} />
+      <FlatList data={listArray} renderItem={renderGridItem} numColumns={1} />
       <FAB
         name="plus"
         onPress={() => {
@@ -83,7 +128,7 @@ function ListsScreen(props) {
       <ActionSheet ref={actionSheetRef} keyboardShouldPersistTaps="never">
         <RenderAddList />
       </ActionSheet>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
