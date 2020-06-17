@@ -15,7 +15,6 @@ import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import FAB from '../components/UI/FAB';
 
-import {LISTS} from '../data/dummy-data';
 import {Colors} from '../constants/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeable from 'react-native-swipeable-row';
@@ -26,7 +25,6 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import List from '../models/list';
 
-const usersCollection = firestore().collection('Lists');
 const actionSheetRef = createRef();
 
 function RenderAddList(props) {
@@ -37,43 +35,52 @@ function RenderAddList(props) {
     </ScrollView>
   );
 }
+
 const user = auth().currentUser;
-const listArray = [];
-function onResult(querySnapshot) {
-  console.log(querySnapshot);
-  querySnapshot.forEach(documentSnapshot => {
-    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data().name);
-    const single = new List(documentSnapshot.id, documentSnapshot.data().name, 'red');
-    listArray.push(single)
-  });
-}
-
-function onError(error) {
-  console.error(error);
-}
-
-firestore()
-  .collection('users').doc(user.uid).collection('Lists')
-  .onSnapshot(onResult, onError);
 
 function ListsScreen(props) {
+  const dbRef = firestore()
+    .collection('users')
+    .doc(user.uid)
+    .collection('Lists');
   const [enteredList, setEnteredList] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [lists, setLists] = useState([]);
 
   const handleListName = listName => {
     setEnteredList(listName);
   };
 
-  const addNewList = () => {
-    console.log(enteredList);
-    firestore()
-      .collection('users').doc(user.uid).collection('Lists')
+  async function addList() {
+    dbRef
       .add({
-        name: enteredList
+        name: enteredList,
       })
       .then(() => {
-        console.log('User added!');
+        console.log('List Added');
       });
-  };
+    setEnteredList('');
+  }
+
+  useEffect(() => {
+    return dbRef.onSnapshot(querySnapshot => {
+      const list = [];
+      querySnapshot.forEach(doc => {
+        const single = new List(doc.id, doc.data().name, 'red');
+        list.push(single);
+      });
+
+      setLists(list);
+
+      if (loading) {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  if (loading) {
+    return <Text>Aasd</Text>;
+  }
 
   const leftContent = <Text>Pull to activate</Text>;
 
@@ -111,14 +118,12 @@ function ListsScreen(props) {
       </Swipeable>
     );
   };
+
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={styles.root}
-      keyboardVerticalOffset={-300}>
+    <KeyboardAvoidingView behavior="padding" style={styles.root} keyboardVerticalOffset={-300}>
       <TextInput value={enteredList} onChangeText={handleListName} />
-      <Button title="Add" onPress={addNewList} />
-      <FlatList data={listArray} renderItem={renderGridItem} numColumns={1} />
+      <Button title="Add" onPress={addList} />
+      <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />
       <FAB
         name="plus"
         onPress={() => {
