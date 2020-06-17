@@ -20,12 +20,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/Feather';
 import ActionSheet from 'react-native-actions-sheet';
+import Modal from 'react-native-modal';
 
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import List from '../models/list';
-
-const actionSheetRef = createRef();
+import { Fab } from 'native-base';
+import NewList from "../components/NewList";
 
 function RenderAddList(props) {
   return (
@@ -43,23 +44,21 @@ function ListsScreen(props) {
     .collection('users')
     .doc(user.uid)
     .collection('Lists');
-  const [enteredList, setEnteredList] = useState('');
   const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  const handleListName = listName => {
-    setEnteredList(listName);
-  };
 
-  async function addList() {
+  async function addList(list) {    
     dbRef
       .add({
-        name: enteredList,
+        name: list,
       })
       .then(() => {
         console.log('List Added');
       });
     setEnteredList('');
+    toggleModal();
   }
 
   useEffect(() => {
@@ -89,9 +88,10 @@ function ListsScreen(props) {
       .then(() => console.log('deleted'));
   };
 
-  const leftContent = <Text>Pull to activate</Text>;
+  
 
   const renderGridItem = itemData => {
+    const leftContent = <Text>Pull to activate</Text>;
     const rightButtons = [
       <TouchableHighlight
         style={styles.slideIcon}
@@ -128,23 +128,25 @@ function ListsScreen(props) {
     );
   };
 
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
       style={styles.root}
       keyboardVerticalOffset={-300}>
-      <TextInput value={enteredList} onChangeText={handleListName} />
-      <Button title="Add" onPress={addList} />
       <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />
-      <FAB
-        name="plus"
-        onPress={() => {
-          actionSheetRef.current?.setModalVisible();
-        }}
-      />
-      <ActionSheet ref={actionSheetRef} keyboardShouldPersistTaps="never">
-        <RenderAddList />
-      </ActionSheet>
+      <FAB name="plus" onPress={toggleModal} />
+
+      <Modal
+        isVisible={isModalVisible}
+        avoidKeyboard={true}
+        onBackButtonPress={toggleModal}
+        style={styles.modal}>
+        <NewList close={toggleModal} addNew={addList}/>
+      </Modal>
     </KeyboardAvoidingView>
   );
 }
@@ -199,6 +201,27 @@ const styles = StyleSheet.create({
   addList: {
     alignItems: 'center',
   },
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  content: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  contentTitle: {
+    fontSize: 20,
+    marginBottom: 12,
+  },
+  input: {
+    width: 100,
+    borderBottomWidth: 1,
+    marginBottom: 15
+  }
 });
 
 export default ListsScreen;

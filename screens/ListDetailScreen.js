@@ -81,7 +81,7 @@ function ListDetailScreen(props) {
 
   const toggleDone = (id, status) => {
     console.log(id, status);
-    
+
     // dbRef
     // .collection('items').doc(id).update({
     //   done: !status
@@ -93,10 +93,10 @@ function ListDetailScreen(props) {
       <TouchableOpacity
         style={styles.item}
         activeOpacity={0.7}
-        onPress = {() => toggleDone(itemData.item.id, itemData.item.done)}>
+        onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
         <CheckBox
           value={itemData.item.done}
-          onPress = {() => toggleDone(itemData.item.id, itemData.item.done)}
+          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}
         />
         <Text style={styles.title}>{itemData.item.name}</Text>
       </TouchableOpacity>
@@ -104,10 +104,14 @@ function ListDetailScreen(props) {
   };
 
   return (
-    <View>
-      <TextInput value={item} onChangeText={handleItem} />
-      <Button title="Add" onPress={addItem} />
-      <FlatList data={listItems} renderItem={renderListItem} numColumns={1} />
+    <View >
+      <View>
+        <FlatList data={listItems} renderItem={renderListItem} numColumns={1} />
+      </View>
+      <View style={styles.newItem}>
+        <TextInput value={item} onChangeText={handleItem} />
+        <Button title="Add" onPress={addItem} />
+      </View>
     </View>
   );
 }
@@ -126,13 +130,15 @@ function ListDetailScreen(props) {
 //   };
 // };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
   item: {
-    flex: 1,
     flexDirection: 'row',
     borderWidth: 0.5,
     margin: 5,
     alignItems: 'center',
+  },
+  newItem: {
+    flexDirection: 'row',
   },
 });
 
