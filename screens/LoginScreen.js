@@ -5,14 +5,14 @@ import {
   KeyboardAvoidingView,
   Text,
   StyleSheet,
-  Button,
+  Alert,
   TouchableOpacity,
 } from 'react-native';
 import {Card} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
-import {Content, Form, Item, Label, Icon, Input} from 'native-base';
+import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
 
 function LoginScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -27,24 +27,24 @@ function LoginScreen(props) {
   };
 
   const loginHandler = () => {
-    console.log(enteredEmail, enteredPassword);
+    // console.log(enteredEmail, enteredPassword);
 
-    // auth()
-    //   .signInWithEmailAndPassword(enteredEmail, enteredPassword)
-    //   .then(() => {
-    //     props.navigation.navigate('Home');
-    //   })
-    //   .catch(error => {
-    //     if (error.code === 'auth/email-already-in-use') {
-    //       console.log('That email address is already in use!');
-    //     }
+    auth()
+      .signInWithEmailAndPassword(enteredEmail, enteredPassword)
+      .then(() => {
+        props.navigation.navigate('Home');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          // console.log('That email address is already in use!');
+        }
 
-    //     if (error.code === 'auth/invalid-email') {
-    //       console.log('That email address is invalid!');
-    //     }
-
-    //     console.error(error);
-    //   });
+        if (error.code === 'auth/invalid-email') {
+          // console.log('That email address is invalid!');
+        }
+        Alert.alert(error.message);
+        console.log(error.message.body);
+      });
   };
 
   return (
@@ -54,14 +54,14 @@ function LoginScreen(props) {
       keyboardVerticalOffset={-300}>
       <ScrollView contentContainerStyle={styles.scroller}>
         <View style={styles.header}>
-          <Text style={styles.text_header}>Welcome!</Text>
+          <Text style={styles.text_header}>Welcome Back!</Text>
         </View>
         <View style={styles.footer}>
           <Content>
             <Form>
               <Item floatingLabel>
-                <Label style={styles.label}>Username</Label>
-                <Input onChangeText={emailHandler} value={enteredEmail} underlineColorAndroid={"red"} />
+                <Label style={styles.label}>Email</Label>
+                <Input onChangeText={emailHandler} value={enteredEmail} />
               </Item>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Password</Label>
@@ -89,6 +89,7 @@ function LoginScreen(props) {
                 </TouchableOpacity>
               </View>
             </Form>
+            {/* <Spinner color='red' style={styles.loading}/> */}
           </Content>
         </View>
       </ScrollView>
@@ -159,6 +160,15 @@ const styles = StyleSheet.create({
   loginText: {
     color: 'white',
     fontSize: 20,
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
