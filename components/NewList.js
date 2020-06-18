@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { Input } from 'native-base';
 
 const NewList = props => {
   const [enteredList, setEnteredList] = useState('');
@@ -22,22 +23,20 @@ const NewList = props => {
     props.close();
   };
   return (
-    <View >
+    <View>
       <View style={styles.closeContainer}>
         <TouchableOpacity style={styles.close} onPress={props.close}>
           <Icon name="x" color="white" size={30} />
         </TouchableOpacity>
       </View>
-        <View style={styles.content}>
-
-        
-      <Text style={styles.contentTitle}>Add new List!</Text>
-      <TextInput
-        style={styles.input}
-        value={enteredList}
-        onChangeText={handleListName}
-      />
-      <Button onPress={handleSubmit} title="Add" />
+      <View style={styles.content}>
+        <Text style={styles.contentTitle}>Add new List!</Text>
+        <TextInput
+          style={styles.input}
+          value={enteredList}
+          onChangeText={handleListName}
+        />
+        <Button onPress={handleSubmit} title="Add" />
       </View>
     </View>
   );
@@ -45,11 +44,12 @@ const NewList = props => {
 
 const styles = StyleSheet.create({
   closeContainer: {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      flexGrow: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: 10
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: -25,
+    zIndex: 100
   },
   close: {
     width: 50,
@@ -64,10 +64,10 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: 'white',
     padding: 22,
+    paddingTop: 35,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   contentTitle: {
     fontSize: 20,

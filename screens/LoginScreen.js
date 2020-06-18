@@ -74,6 +74,8 @@ function LoginScreen(props) {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={loginHandler}>
                   <LinearGradient
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
                     colors={[Colors.accentColor, Colors.primaryColor]}
                     style={styles.linearGradient}>
                     <Text style={styles.loginText}>Log In</Text>
@@ -119,7 +121,8 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingVertical: 50,
+    justifyContent: 'center'
   },
   text_header: {
     color: '#fff',
@@ -135,6 +138,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     alignItems: 'center',
+    flex: 1,
   },
   forgot: {
     color: Colors.accentColor,
@@ -150,11 +154,11 @@ const styles = StyleSheet.create({
     color: Colors.accentColor,
   },
   linearGradient: {
-    borderRadius: 5,
+    borderRadius: 25,
     elevation: 5,
     margin: 15,
     marginHorizontal: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 100,
     paddingVertical: 10,
   },
   loginText: {

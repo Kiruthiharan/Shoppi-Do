@@ -25,8 +25,8 @@ import Modal from 'react-native-modal';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import List from '../models/list';
-import { Fab } from 'native-base';
-import NewList from "../components/NewList";
+import {Fab} from 'native-base';
+import NewList from '../components/NewList';
 
 function RenderAddList(props) {
   return (
@@ -48,8 +48,7 @@ function ListsScreen(props) {
   const [lists, setLists] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
 
-
-  async function addList(list) {    
+  async function addList(list) {
     dbRef
       .add({
         name: list,
@@ -88,8 +87,6 @@ function ListsScreen(props) {
       .then(() => console.log('deleted'));
   };
 
-  
-
   const renderGridItem = itemData => {
     const leftContent = <Text>Pull to activate</Text>;
     const rightButtons = [
@@ -116,6 +113,8 @@ function ListsScreen(props) {
             });
           }}>
           <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
             colors={['#39A1F7', '#718BFB', '#A875FF']}
             style={styles.linearGradient}>
             <View>
@@ -145,7 +144,7 @@ function ListsScreen(props) {
         avoidKeyboard={true}
         onBackButtonPress={toggleModal}
         style={styles.modal}>
-        <NewList close={toggleModal} addNew={addList}/>
+        <NewList close={toggleModal} addNew={addList} />
       </Modal>
     </KeyboardAvoidingView>
   );
@@ -220,8 +219,8 @@ const styles = StyleSheet.create({
   input: {
     width: 100,
     borderBottomWidth: 1,
-    marginBottom: 15
-  }
+    marginBottom: 15,
+  },
 });
 
 export default ListsScreen;

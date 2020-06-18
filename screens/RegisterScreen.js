@@ -50,7 +50,7 @@ function RegisterScreen(props) {
     <KeyboardAvoidingView
       behavior="padding"
       style={styles.container}
-      keyboardVerticalOffset={50}>
+      keyboardVerticalOffset={-300}>
       <ScrollView contentContainerStyle={styles.scroller}>
         <View style={styles.header}>
           <Text style={styles.text_header}>Get on Board!</Text>
@@ -63,7 +63,7 @@ function RegisterScreen(props) {
                 <Input />
               </Item>
               <Item floatingLabel>
-                <Label style={styles.label}>Username</Label>
+                <Label style={styles.label}>Email</Label>
                 <Input onChangeText={emailHandler} value={enteredEmail} />
               </Item>
               <Item floatingLabel error={false}>
@@ -78,6 +78,8 @@ function RegisterScreen(props) {
               <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={registerHandler}>
                   <LinearGradient
+                    start={{x: 0, y: 0}}
+                    end={{x: 1, y: 0}}
                     colors={[Colors.accentColor, Colors.primaryColor]}
                     style={styles.linearGradient}>
                     <Text style={styles.loginText}>Register</Text>
@@ -138,6 +140,7 @@ const styles = StyleSheet.create({
     marginVertical: -10,
   },
   buttonContainer: {
+    marginTop: 25,
     alignItems: 'center',
   },
   registerContainer: {
@@ -149,11 +152,11 @@ const styles = StyleSheet.create({
     color: Colors.accentColor,
   },
   linearGradient: {
-    borderRadius: 5,
+    borderRadius: 25,
     elevation: 5,
     margin: 15,
     marginHorizontal: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 100,
     paddingVertical: 10,
   },
   loginText: {

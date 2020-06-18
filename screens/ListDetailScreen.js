@@ -15,6 +15,7 @@ import HeaderButton from '../components/HeaderButton';
 
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {Card} from 'native-base';
 
 const user = auth().currentUser;
 
@@ -90,26 +91,31 @@ function ListDetailScreen(props) {
 
   const renderListItem = itemData => {
     return (
+      <Card style={styles.todoGrid}>
       <TouchableOpacity
         style={styles.item}
         activeOpacity={0.7}
         onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
-        <CheckBox
-          value={itemData.item.done}
-          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}
-        />
-        <Text style={styles.title}>{itemData.item.name}</Text>
+        
+          <CheckBox
+            value={itemData.item.done}
+            onPress={() => toggleDone(itemData.item.id, itemData.item.done)}
+          />
+          <Text style={styles.title}>{itemData.item.name}</Text>
       </TouchableOpacity>
+      </Card>
     );
   };
 
   return (
-    <View >
-      <View>
-        <FlatList data={listItems} renderItem={renderListItem} numColumns={1} />
-      </View>
-      <View style={styles.newItem}>
-        <TextInput value={item} onChangeText={handleItem} />
+    <View style={styles.root}>
+      <FlatList data={listItems} renderItem={renderListItem} numColumns={1} />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          value={item}
+          onChangeText={handleItem}
+        />
         <Button title="Add" onPress={addItem} />
       </View>
     </View>
@@ -130,15 +136,24 @@ function ListDetailScreen(props) {
 //   };
 // };
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    flexDirection: 'column',
+  },
   item: {
     flexDirection: 'row',
-    borderWidth: 0.5,
     margin: 5,
     alignItems: 'center',
   },
-  newItem: {
+  inputContainer: {
     flexDirection: 'row',
+  },
+  input: {
+    flex: 1,
+  },
+  todoGrid: {
+    flex: 1,
   },
 });
 
