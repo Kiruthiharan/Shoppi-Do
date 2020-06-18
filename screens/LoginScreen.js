@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Card} from 'native-base';
-import {Input} from 'react-native-elements';
+import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
+import {Content, Form, Item, Label, Icon, Input} from 'native-base';
 
 function LoginScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -26,24 +27,24 @@ function LoginScreen(props) {
   };
 
   const loginHandler = () => {
-    auth()
-      .signInWithEmailAndPassword(enteredEmail, enteredPassword)
-      .then(() => {
-        props.navigation.navigate('Home');
-      })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
+    console.log(enteredEmail, enteredPassword);
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
+    // auth()
+    //   .signInWithEmailAndPassword(enteredEmail, enteredPassword)
+    //   .then(() => {
+    //     props.navigation.navigate('Home');
+    //   })
+    //   .catch(error => {
+    //     if (error.code === 'auth/email-already-in-use') {
+    //       console.log('That email address is already in use!');
+    //     }
 
-        console.error(error);
-      });
+    //     if (error.code === 'auth/invalid-email') {
+    //       console.log('That email address is invalid!');
+    //     }
 
-
+    //     console.error(error);
+    //   });
   };
 
   return (
@@ -56,70 +57,39 @@ function LoginScreen(props) {
           <Text style={styles.text_header}>Welcome!</Text>
         </View>
         <View style={styles.footer}>
-          <Text style={[styles.text_footer]}>Username</Text>
-          <Input
-            placeholder="Email"
-            onChangeText={emailHandler}
-            value={enteredEmail}
-          />
-          <Text style={styles.text_footer}>Password</Text>
-          <Input
-            placeholder="Password"
-            onChangeText={passwordHandler}
-            value={enteredPassword}
-          />
-
-          <TouchableOpacity>
-            <Text style={{color: '#009387', marginTop: 15}}>
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
-
-          <View >
-            <TouchableOpacity
-              onPress={loginHandler}
-              style={[
-                styles.signIn,
-                {
-                  borderColor: '#009387',
-                  borderWidth: 1,
-                  marginTop: 15,
-                },
-              ]}>
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: '#009387',
-                  },
-                ]}>
-                Log In
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                props.navigation.navigate('Register');
-              }}
-              style={[
-                styles.signIn,
-                {
-                  borderColor: '#009387',
-                  borderWidth: 1,
-                  marginTop: 15,
-                },
-              ]}>
-              <Text
-                style={[
-                  styles.textSign,
-                  {
-                    color: '#009387',
-                  },
-                ]}>
-                Sign Up
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <Content>
+            <Form>
+              <Item floatingLabel>
+                <Label style={styles.label}>Username</Label>
+                <Input onChangeText={emailHandler} value={enteredEmail} underlineColorAndroid={"red"} />
+              </Item>
+              <Item floatingLabel error={false}>
+                <Label style={styles.label}>Password</Label>
+                <Input onChangeText={passwordHandler} value={enteredPassword} />
+              </Item>
+              {/* <Text Style={{color: 'red'}}>Error</Text> */}
+              <TouchableOpacity>
+                <Text style={styles.forgot}>Forgot password?</Text>
+              </TouchableOpacity>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity onPress={loginHandler}>
+                  <LinearGradient
+                    colors={[Colors.accentColor, Colors.primaryColor]}
+                    style={styles.linearGradient}>
+                    <Text style={styles.loginText}>Log In</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+              <View>
+                <TouchableOpacity
+                  onPress={() => props.navigation.navigate('Register')}>
+                  <Text style={styles.registerContainer}>
+                    New here? <Text style={styles.register}> Register</Text>
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Form>
+          </Content>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -128,7 +98,7 @@ function LoginScreen(props) {
 
 const styles = StyleSheet.create({
   scroller: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   container: {
     flex: 1,
@@ -140,7 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 20,
     paddingBottom: 50,
-    paddingTop: 20
+    paddingTop: 20,
   },
   footer: {
     flex: 2,
@@ -148,55 +118,47 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingTop: 50,
   },
   text_header: {
     color: '#fff',
     fontWeight: 'bold',
     fontSize: 30,
   },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
-    paddingLeft: 10,
-    color: '#05375a',
-  },
   errorMsg: {
     color: '#FF0000',
     fontSize: 14,
   },
-  button: {
-    alignItems: 'center',
-    marginTop: 50,
+  label: {
+    marginVertical: -10,
   },
-  signIn: {
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
+  buttonContainer: {
     alignItems: 'center',
-    borderRadius: 10,
   },
-  textSign: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  forgot: {
+    color: Colors.accentColor,
+    margin: 15,
+    paddingTop: 10,
+  },
+  registerContainer: {
+    alignSelf: 'center',
+    marginTop: 25,
+    fontSize: 15,
+  },
+  register: {
+    color: Colors.accentColor,
+  },
+  linearGradient: {
+    borderRadius: 5,
+    elevation: 5,
+    margin: 15,
+    marginHorizontal: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
+  loginText: {
+    color: 'white',
+    fontSize: 20,
   },
 });
 
