@@ -3,7 +3,7 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {Platform} from 'react-native';
+import {Platform, View, Button} from 'react-native';
 import ListsScreen from '../screens/ListsScreen';
 import ListDetailScreen from '../screens/ListDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
@@ -11,6 +11,8 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {SafeAreaView}  from 'react-native-safe-area-view';
+
 
 // header styles should change font
 const NavOptions = {
@@ -78,7 +80,9 @@ const HomeNavigator = createDrawerNavigator({
   },
   List: {
     screen: ListNavigator
-  }
+  },
+}, {
+  
 })
 
 
@@ -94,6 +98,7 @@ const AuthNavigator = createStackNavigator({
     headerShown: false
   }
 })
+
 const MainNavigator = createSwitchNavigator({
   Auth: {
     screen: AuthNavigator

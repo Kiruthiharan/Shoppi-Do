@@ -25,6 +25,8 @@ function ListDetailScreen(props) {
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState('');
   const [list, setList] = useState('');
+  const [doneList, setDoneList] = useState([]);
+  const [pendingList, setPendingList] = useState([]);
 
   const dbRef = firestore()
     .collection('users')
@@ -47,15 +49,25 @@ function ListDetailScreen(props) {
   useEffect(() => {
     return dbRef.collection('items').onSnapshot(querySnapshot => {
       const items = [];
+      const doneItems = [];
+      const pendingItems = [];
       querySnapshot.forEach(documentSnapshot => {
-        items.push({
+        const item = {
           id: documentSnapshot.id,
           name: documentSnapshot.data().name,
           done: documentSnapshot.data().done,
-        });
+        };
+        if (documentSnapshot.data().done) {
+          doneItems.push(item);
+        } else {
+          pendingItems.push(item);
+        }
+        items.push(item);
       });
 
       setListItems(items);
+      setDoneList(doneItems);
+      setPendingList(pendingItems);
 
       if (loading) {
         setLoading(false);
@@ -83,40 +95,63 @@ function ListDetailScreen(props) {
   const toggleDone = (id, status) => {
     console.log(id, status);
 
-    // dbRef
-    // .collection('items').doc(id).update({
-    //   done: !status
-    // })
+    dbRef
+      .collection('items')
+      .doc(id)
+      .update({
+        done: !status,
+      });
   };
 
-  const renderListItem = itemData => {
+  const renderDoneItem = itemData => {
     return (
       <Card style={styles.todoGrid}>
-      <TouchableOpacity
-        style={styles.item}
-        activeOpacity={0.7}
-        onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
-        
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.7}
+          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
           <CheckBox
             value={itemData.item.done}
-            onPress={() => toggleDone(itemData.item.id, itemData.item.done)}
+            onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
           />
           <Text style={styles.title}>{itemData.item.name}</Text>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </Card>
+    );
+  };
+
+  const renderPendingItem = itemData => {
+    return (
+      <Card style={styles.todoGrid}>
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.7}
+          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
+          <CheckBox
+            value={itemData.item.done}
+            onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
+          />
+          <Text style={styles.doneItem}>{itemData.item.name}</Text>
+        </TouchableOpacity>
       </Card>
     );
   };
 
   return (
     <View style={styles.root}>
-      <FlatList data={listItems} renderItem={renderListItem} numColumns={1} />
+      <Text>Pending Items</Text>
+      <FlatList  data={pendingList} renderItem={renderDoneItem} numColumns={1} />
+      <Text>Done Items</Text>
+      <FlatList data={doneList} renderItem={renderPendingItem} numColumns={1} />
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={item}
           onChangeText={handleItem}
         />
-        <Button title="Add" onPress={addItem} />
+        <View style={styles.addBtn}>
+          <Button title="Add" onPress={addItem} />
+        </View>
       </View>
     </View>
   );
@@ -148,13 +183,22 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   input: {
     flex: 1,
+    backgroundColor: 'white',
+    margin: 5,
+    borderRadius: 30,
+    padding: 10,
   },
   todoGrid: {
     flex: 1,
   },
+  addBtn: {
+    marginHorizontal: 5,
+  },
+  doneItem: {textDecorationLine: 'line-through', textDecorationStyle: 'solid'},
 });
 
 export default ListDetailScreen;

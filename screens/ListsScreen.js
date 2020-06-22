@@ -19,6 +19,7 @@ import {Colors} from '../constants/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeable from 'react-native-swipeable-row';
 import Icon from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ActionSheet from 'react-native-actions-sheet';
 import Modal from 'react-native-modal';
 
@@ -27,15 +28,6 @@ import auth from '@react-native-firebase/auth';
 import List from '../models/list';
 import {Fab} from 'native-base';
 import NewList from '../components/NewList';
-
-function RenderAddList(props) {
-  return (
-    <ScrollView>
-      <FAB name="x" />
-      <TextInput>Hello</TextInput>
-    </ScrollView>
-  );
-}
 
 const user = auth().currentUser;
 
@@ -93,10 +85,7 @@ function ListsScreen(props) {
       <TouchableHighlight
         style={styles.slideIcon}
         onPress={() => deleteItem(itemData.item.id)}>
-        <Icon name="delete" size={25} />
-      </TouchableHighlight>,
-      <TouchableHighlight style={styles.slideIcon}>
-        <Icon name="edit" size={25} />
+        <MaterialIcons name="delete" size={25} color={'#d11a2a'}/>
       </TouchableHighlight>,
     ];
 
@@ -196,6 +185,7 @@ const styles = StyleSheet.create({
   },
   slideIcon: {
     top: 50,
+    right: -10,
   },
   addList: {
     alignItems: 'center',
