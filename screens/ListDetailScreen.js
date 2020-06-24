@@ -139,9 +139,9 @@ function ListDetailScreen(props) {
 
   return (
     <View style={styles.root}>
-      <Text>Pending Items</Text>
+      <Text style={{marginVertical: 15}}>Pending Items</Text>
       <FlatList  data={pendingList} renderItem={renderDoneItem} numColumns={1} />
-      <Text>Done Items</Text>
+      <Text style={{marginTop: -200}} >Done Items</Text>
       <FlatList data={doneList} renderItem={renderPendingItem} numColumns={1} />
       <View style={styles.inputContainer}>
         <TextInput
