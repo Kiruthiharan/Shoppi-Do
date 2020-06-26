@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Button,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -79,6 +80,11 @@ function ListsScreen(props) {
       .then(() => console.log('deleted'));
   };
 
+  const updateItem = id => {
+    Alert.prompt("Enter List Name")
+    Alert.alert("Enter List Name")
+  };
+
   const renderGridItem = itemData => {
     const leftContent = <Text>Pull to activate</Text>;
     const rightButtons = [
@@ -86,6 +92,11 @@ function ListsScreen(props) {
         style={styles.slideIcon}
         onPress={() => deleteItem(itemData.item.id)}>
         <MaterialIcons name="delete" size={25} color={'#d11a2a'}/>
+      </TouchableHighlight>,
+      <TouchableHighlight
+        style={styles.slideIcon}
+        onPress={() => updateItem(itemData.item.id)}>
+        <MaterialIcons name="edit" size={25} color={'black'}/>
       </TouchableHighlight>,
     ];
 
@@ -100,7 +111,9 @@ function ListsScreen(props) {
                 listId: itemData.item.id,
               },
             });
-          }}>
+          }}
+          onLongPress= {() => console.log("long")}
+          >
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
@@ -185,7 +198,6 @@ const styles = StyleSheet.create({
   },
   slideIcon: {
     top: 50,
-    right: -10,
   },
   addList: {
     alignItems: 'center',

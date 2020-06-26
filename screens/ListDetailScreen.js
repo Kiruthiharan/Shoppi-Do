@@ -140,10 +140,27 @@ function ListDetailScreen(props) {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.heading}>Pending Items</Text>
-      <FlatList data={pendingList} renderItem={renderDoneItem} numColumns={1} />
-      <Text style={styles.heading}>Done Items</Text>
-      <FlatList data={doneList} renderItem={renderPendingItem} numColumns={1} />
+      <View style={styles.lists}>
+        <View>
+          <Text style={styles.heading}>Pending Items</Text>
+          <FlatList
+            data={pendingList}
+            renderItem={renderDoneItem}
+            numColumns={1}
+          />
+          {pendingList.length === 0 ? <Text> *No pending items</Text>: null}
+        </View>
+
+        <View>
+          <Text style={styles.heading}>Done Items</Text>
+          <FlatList
+            data={doneList}
+            renderItem={renderPendingItem}
+            numColumns={1}
+          />
+        </View>
+      </View>
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -174,8 +191,11 @@ function ListDetailScreen(props) {
 
 const styles = StyleSheet.create({
   root: {
-    flexDirection: 'column',
     flex: 1,
+  },
+  lists: {
+    flexGrow: 1,
+    alignContent: 'center',
   },
   item: {
     flexDirection: 'row',
@@ -196,6 +216,7 @@ const styles = StyleSheet.create({
   todoGrid: {
     flex: 1,
     borderRadius: 20,
+    paddingHorizontal: 10,
   },
   addBtn: {
     marginHorizontal: 5,
