@@ -16,6 +16,7 @@ import HeaderButton from '../components/HeaderButton';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Card} from 'native-base';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const user = auth().currentUser;
 
@@ -139,9 +140,9 @@ function ListDetailScreen(props) {
 
   return (
     <View style={styles.root}>
-      <Text style={{marginVertical: 15}}>Pending Items</Text>
-      <FlatList  data={pendingList} renderItem={renderDoneItem} numColumns={1} />
-      <Text style={{marginTop: -200}} >Done Items</Text>
+      <Text style={styles.heading}>Pending Items</Text>
+      <FlatList data={pendingList} renderItem={renderDoneItem} numColumns={1} />
+      <Text style={styles.heading}>Done Items</Text>
       <FlatList data={doneList} renderItem={renderPendingItem} numColumns={1} />
       <View style={styles.inputContainer}>
         <TextInput
@@ -173,8 +174,8 @@ function ListDetailScreen(props) {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
     flexDirection: 'column',
+    flex: 1,
   },
   item: {
     flexDirection: 'row',
@@ -194,11 +195,20 @@ const styles = StyleSheet.create({
   },
   todoGrid: {
     flex: 1,
+    borderRadius: 20,
   },
   addBtn: {
     marginHorizontal: 5,
   },
-  doneItem: {textDecorationLine: 'line-through', textDecorationStyle: 'solid'},
+  doneItem: {
+    textDecorationLine: 'line-through',
+    textDecorationStyle: 'solid',
+  },
+  heading: {
+    marginVertical: 10,
+    fontSize: 18,
+    alignSelf: 'center',
+  },
 });
 
 export default ListDetailScreen;

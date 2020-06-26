@@ -72,7 +72,7 @@ function LoginScreen(props) {
                 <Text style={styles.forgot}>Forgot password?</Text>
               </TouchableOpacity>
               <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={loginHandler}>
+                <TouchableOpacity onPress={loginHandler} activeOpacity={0.3}>
                   <LinearGradient
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 0}}

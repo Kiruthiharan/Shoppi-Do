@@ -6,13 +6,15 @@ import {
   Text,
   StyleSheet,
   Image,
-  TextInput,
+  Button
 } from 'react-native';
+import {TextInput, RadioButton} from 'react-native-paper';
 import Colors from '../constants/Colors';
+import {DatePicker, } from 'native-base';
 
 function ProfileScreen(props) {
   return (
-    <View style={styles.root}>
+    <ScrollView contentContainerStyle={styles.root}>
       <View>
         <Image
           source={require('../assets/images/profile-default.jpg')}
@@ -21,11 +23,35 @@ function ProfileScreen(props) {
       </View>
 
       <View style={styles.inputContainer}>
-        <TextInput placeholder="UUserName" style={styles.input} />
-        <TextInput placeholder="UUserName" style={styles.input} />
-        <TextInput placeholder="UUserName" style={styles.input} />
+        <TextInput mode="outlined" label="Username" style={styles.input} />
+        <TextInput
+          mode="outlined"
+          label="Contact No"
+          style={styles.input}
+          selectionColor={Colors.primaryColor}
+        />
+        <View style={styles.rowContainer}>
+          <Text>Date of Birth </Text>
+          <View style={styles.datePicker}>
+            <DatePicker placeHolderText="Select" />
+          </View>
+        </View>
+        <View style={styles.rowContainer}>
+          <Text>Gender</Text>
+          <RadioButton.Group>
+            <View style={styles.genderContainer}>
+              <Text>Male</Text>
+              <RadioButton value="Male" />
+            </View>
+            <View style={styles.genderContainer}>
+              <Text>Female</Text>
+              <RadioButton value="Female" />
+            </View>
+          </RadioButton.Group>
+        </View>
+        <Button title="Edit"/>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -43,16 +69,30 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   inputContainer: {
-    flex: 1,
     justifyContent: 'center',
   },
   input: {
     margin: 15,
-    height: 40,
     width: 300,
+    height: 50,
     borderColor: Colors.primaryColor,
-    borderWidth: 1,
   },
+  rowContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
+    marginVertical: 10
+  },
+  datePicker: {
+    borderWidth: 1,
+    flex: 1,
+    marginLeft: 15
+  },
+  genderContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  }
 });
 
 export default ProfileScreen;
