@@ -9,6 +9,7 @@ import ListDetailScreen from '../screens/ListDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import RemainderScreen from '../screens/RemainderScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView}  from 'react-native-safe-area-view';
@@ -58,6 +59,14 @@ const TabNavigator = createBottomTabNavigator(
         },
       },
     },
+    Remainders: {
+      screen: RemainderScreen,
+      navigationOptions: {
+        tabBarIcon: tabInfo => {
+          return <Icon name="bell" size={23} color={tabInfo.tintColor} />;
+        },
+      },
+    },
     Profile: {
       screen: ProfileNavigator,
       navigationOptions: {
@@ -81,8 +90,6 @@ const HomeNavigator = createDrawerNavigator({
   List: {
     screen: ListNavigator
   },
-}, {
-  
 })
 
 

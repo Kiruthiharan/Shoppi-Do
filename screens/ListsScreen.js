@@ -82,7 +82,7 @@ function ListsScreen(props) {
 
   const updateItem = id => {
     Alert.prompt("Enter List Name")
-    Alert.alert("Enter List Name")
+    Alert.alert()
   };
 
   const renderGridItem = itemData => {
