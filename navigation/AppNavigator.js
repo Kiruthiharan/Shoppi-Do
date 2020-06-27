@@ -13,7 +13,8 @@ import RemainderScreen from '../screens/RemainderScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView}  from 'react-native-safe-area-view';
-import RemainderDetailScreen from '../screens/RemainderDetailScreen';
+import NewRemainderScreen from '../screens/NewRemainderScreen';
+import EditRemainderScreen from '../screens/EditRemainderScreen';
 
 
 // header styles should change font
@@ -54,8 +55,11 @@ const RemainderNavigator = createStackNavigator(
     Remainder: {
       screen: RemainderScreen
     },
-    RemainderDetail: {
-      screen: RemainderDetailScreen
+    NewRemainder: {
+      screen: NewRemainderScreen
+    },
+    EditRemainder: {
+      screen: EditRemainderScreen
     }
   },
   {

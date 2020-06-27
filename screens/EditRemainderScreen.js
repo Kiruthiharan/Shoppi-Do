@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,8 @@ import auth from '@react-native-firebase/auth';
 
 const user = auth().currentUser;
 
-function RemainderDetailScreen(props) {
+function EditRemainderScreen(props) {
+  const remainderId = props.navigation.getParam('remainderId');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [name, setName] = useState('');
@@ -24,9 +25,23 @@ function RemainderDetailScreen(props) {
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
   const dbRef = firestore()
-  .collection('users')
-  .doc(user.uid)
-  .collection('Remainders');
+    .collection('users')
+    .doc(user.uid)
+    .collection('Remainders')
+    .doc(remainderId);
+
+  useEffect(() => {
+    dbRef.get().then(documentSnapshot => {
+      console.log(documentSnapshot);
+      setDate(documentSnapshot.data().date)
+      setTime(documentSnapshot.data().time)
+      setName(documentSnapshot.data().name)
+    });
+
+    return () => {
+      console.log('list');
+    };
+  }, [remainderId]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -55,18 +70,16 @@ function RemainderDetailScreen(props) {
   };
 
   const handleName = name => {
-    console.log(name);
-    
     setName(name);
   };
 
-  const handleSubmit = () => {    
-    dbRef.add({
-      Name: name,
-      Time: time,
-      Date: date
-    })
-  }
+  const handleSubmit = () => {
+    dbRef.update({
+      name: name,
+      time: time,
+      date: date,
+    });
+  };
 
   return (
     <View style={styles.root}>
@@ -150,4 +163,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RemainderDetailScreen;
+export default EditRemainderScreen;
