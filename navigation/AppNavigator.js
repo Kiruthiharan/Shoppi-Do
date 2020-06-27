@@ -3,6 +3,7 @@ import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 import {Platform, View, Button} from 'react-native';
 import ListsScreen from '../screens/ListsScreen';
 import ListDetailScreen from '../screens/ListDetailScreen';
@@ -12,10 +13,9 @@ import RegisterScreen from '../screens/RegisterScreen';
 import RemainderScreen from '../screens/RemainderScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {SafeAreaView}  from 'react-native-safe-area-view';
+import {SafeAreaView} from 'react-native-safe-area-view';
 import NewRemainderScreen from '../screens/NewRemainderScreen';
 import EditRemainderScreen from '../screens/EditRemainderScreen';
-
 
 // header styles should change font
 const NavOptions = {
@@ -53,21 +53,21 @@ const ProfileNavigator = createStackNavigator(
 const RemainderNavigator = createStackNavigator(
   {
     Remainder: {
-      screen: RemainderScreen
+      screen: RemainderScreen,
     },
     NewRemainder: {
-      screen: NewRemainderScreen
+      screen: NewRemainderScreen,
     },
     EditRemainder: {
-      screen: EditRemainderScreen
-    }
+      screen: EditRemainderScreen,
+    },
   },
   {
     defaultNavigationOptions: NavOptions,
   },
-)
+);
 
-const TabNavigator = createBottomTabNavigator(
+const TabNavigator = createMaterialBottomTabNavigator(
   {
     Lists: {
       screen: ListNavigator,
@@ -84,6 +84,7 @@ const TabNavigator = createBottomTabNavigator(
         tabBarIcon: tabInfo => {
           return <Icon name="bell" size={23} color={tabInfo.tintColor} />;
         },
+        tabBarColor: 'red'
       },
     },
     Profile: {
@@ -92,46 +93,48 @@ const TabNavigator = createBottomTabNavigator(
         tabBarIcon: tabInfo => {
           return <Icon name="user" size={23} color={tabInfo.tintColor} />;
         },
+        tabBarColor: 'blue'
       },
     },
   },
   {
-    tabBarOptions: {
-      activeTintColor: Colors.accentColor,
-    },
+    activeTintColor: Colors.accentColor,
+    shifting: true
   },
 );
 
 const HomeNavigator = createDrawerNavigator({
   Profile: {
-    screen: TabNavigator
+    screen: TabNavigator,
   },
   List: {
-    screen: ListNavigator
+    screen: ListNavigator,
   },
-})
+});
 
-
-const AuthNavigator = createStackNavigator({
-  Login: {
-    screen: LoginScreen
+const AuthNavigator = createStackNavigator(
+  {
+    Login: {
+      screen: LoginScreen,
+    },
+    Register: {
+      screen: RegisterScreen,
+    },
   },
-  Register: {
-    screen: RegisterScreen
-  }
-},{
-  defaultNavigationOptions: {
-    headerShown: false
-  }
-})
+  {
+    defaultNavigationOptions: {
+      headerShown: false,
+    },
+  },
+);
 
 const MainNavigator = createSwitchNavigator({
   Auth: {
-    screen: AuthNavigator
+    screen: AuthNavigator,
   },
   Home: {
-    screen: HomeNavigator
-  }
-})
+    screen: HomeNavigator,
+  },
+});
 
 export default createAppContainer(MainNavigator);

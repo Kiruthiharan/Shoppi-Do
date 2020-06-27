@@ -81,8 +81,7 @@ function ListsScreen(props) {
   };
 
   const updateItem = id => {
-    Alert.prompt("Enter List Name")
-    Alert.alert()
+    toggleModal()
   };
 
   const renderGridItem = itemData => {
@@ -91,12 +90,12 @@ function ListsScreen(props) {
       <TouchableHighlight
         style={styles.slideIcon}
         onPress={() => deleteItem(itemData.item.id)}>
-        <MaterialIcons name="delete" size={25} color={'#d11a2a'}/>
+        <MaterialIcons name="delete" size={25} color={'#d11a2a'} />
       </TouchableHighlight>,
       <TouchableHighlight
         style={styles.slideIcon}
         onPress={() => updateItem(itemData.item.id)}>
-        <MaterialIcons name="edit" size={25} color={'black'}/>
+        <MaterialIcons name="edit" size={25} color={'black'} />
       </TouchableHighlight>,
     ];
 
@@ -112,8 +111,7 @@ function ListsScreen(props) {
               },
             });
           }}
-          onLongPress= {() => console.log("long")}
-          >
+          onLongPress={() => console.log('long')}>
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 1, y: 0}}
