@@ -8,15 +8,16 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import {Card} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../constants/Colors';
 import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
+import firestore from '@react-native-firebase/firestore';
 
 function RegisterScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
+  const [enteredUserName, setEnteredUserName] = useState('');
 
   const emailHandler = email => {
     setEnteredEmail(email);
@@ -26,12 +27,22 @@ function RegisterScreen(props) {
     setEnteredPassword(password);
   };
 
+  const usernameHandler = username => {
+    setEnteredUserName(username);
+  };
+
   const registerHandler = () => {
-    console.log(enteredEmail + ' ' + enteredPassword);
+    auth().signOut();
     auth()
       .createUserWithEmailAndPassword(enteredEmail, enteredPassword)
       .then(() => {
         console.log('User account created & signed in!');
+        const user = auth().currentUser;
+        const dbRef = firestore()
+          .collection('users')
+          .doc(user.uid);
+        dbRef.set({username: enteredUserName});
+        props.navigation.navigate('Login');
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -60,7 +71,7 @@ function RegisterScreen(props) {
             <Form>
               <Item floatingLabel>
                 <Label style={styles.label}>Username</Label>
-                <Input />
+                <Input onChangeText={usernameHandler} />
               </Item>
               <Item floatingLabel>
                 <Label style={styles.label}>Email</Label>
