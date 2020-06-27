@@ -13,6 +13,7 @@ import RemainderScreen from '../screens/RemainderScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView}  from 'react-native-safe-area-view';
+import RemainderDetailScreen from '../screens/RemainderDetailScreen';
 
 
 // header styles should change font
@@ -48,6 +49,20 @@ const ProfileNavigator = createStackNavigator(
   },
 );
 
+const RemainderNavigator = createStackNavigator(
+  {
+    Remainder: {
+      screen: RemainderScreen
+    },
+    RemainderDetail: {
+      screen: RemainderDetailScreen
+    }
+  },
+  {
+    defaultNavigationOptions: NavOptions,
+  },
+)
+
 const TabNavigator = createBottomTabNavigator(
   {
     Lists: {
@@ -60,7 +75,7 @@ const TabNavigator = createBottomTabNavigator(
       },
     },
     Remainders: {
-      screen: RemainderScreen,
+      screen: RemainderNavigator,
       navigationOptions: {
         tabBarIcon: tabInfo => {
           return <Icon name="bell" size={23} color={tabInfo.tintColor} />;

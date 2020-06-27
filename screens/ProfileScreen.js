@@ -83,13 +83,13 @@ function ProfileScreen(props) {
   const RenderFAB = () => {
     if (!editable) {
       return (
-        <Fab position="topRight" onPress={toggleEdit}>
-          <Icon name="edit-2" />
+        <Fab position="topRight" style={{ backgroundColor: Colors.primaryColor }} onPress={toggleEdit}>
+          <Icon name="edit-2"/>
         </Fab>
       );
     } else {
       return (
-        <Fab position="topRight" onPress={revertChanges}>
+        <Fab position="topRight" style={{ backgroundColor: 'red' }} onPress={revertChanges}>
           <Icon name="x" />
         </Fab>
       );
