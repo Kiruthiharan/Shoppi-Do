@@ -13,6 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
 import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
+import {HelperText} from 'react-native-paper';
 
 function LoginScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -63,11 +64,16 @@ function LoginScreen(props) {
                 <Label style={styles.label}>Email</Label>
                 <Input onChangeText={emailHandler} value={enteredEmail} />
               </Item>
+              <HelperText style={styles.helper} type="error" visible={true}>
+                Email address is invalid!
+              </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Password</Label>
-                <Input onChangeText={passwordHandler} value={enteredPassword} />
+                <Input onChangeText={passwordHandler} value={enteredPassword} secureTextEntry={true}/>
               </Item>
-              {/* <Text Style={{color: 'red'}}>Error</Text> */}
+              <HelperText type="error" visible={true}>
+                Email address is invalid!
+              </HelperText>
               <TouchableOpacity>
                 <Text style={styles.forgot}>Forgot password?</Text>
               </TouchableOpacity>
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     paddingHorizontal: 20,
     paddingVertical: 50,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   text_header: {
     color: '#fff',
@@ -174,6 +180,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  helper: {
+    marginBottom: -10
+  }
 });
 
 export default LoginScreen;

@@ -13,6 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../constants/Colors';
 import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
 import firestore from '@react-native-firebase/firestore';
+import {HelperText, TextInput} from 'react-native-paper';
 
 function RegisterScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -73,19 +74,30 @@ function RegisterScreen(props) {
                 <Label style={styles.label}>Username</Label>
                 <Input onChangeText={usernameHandler} />
               </Item>
+              <HelperText style={styles.helper} type="error" visible={false}>
+                Email address is invalid!
+              </HelperText>
               <Item floatingLabel>
                 <Label style={styles.label}>Email</Label>
                 <Input onChangeText={emailHandler} value={enteredEmail} />
               </Item>
+              <HelperText style={styles.helper} type="error" visible={false}>
+                Email address is invalid!
+              </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Password</Label>
                 <Input onChangeText={passwordHandler} value={enteredPassword} />
               </Item>
+              <HelperText style={styles.helper} type="error" visible={false}>
+                Email address is invalid!
+              </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Confirm Password</Label>
                 <Input />
               </Item>
-              {/* <Text Style={{color: 'red'}}>Error</Text> */}
+              <HelperText style={styles.helper} type="error" visible={false}>
+                Email address is invalid!
+              </HelperText>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={registerHandler}>
                   <LinearGradient
@@ -136,7 +148,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     borderTopLeftRadius: 30,
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingVertical: 25,
   },
   text_header: {
     color: '#fff',
@@ -183,6 +195,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  helper: {
+    marginBottom: -15
+  }
 });
 
 export default RegisterScreen;
