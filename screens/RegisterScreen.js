@@ -15,10 +15,12 @@ import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
 import firestore from '@react-native-firebase/firestore';
 import {HelperText, TextInput} from 'react-native-paper';
 
+
 function RegisterScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
   const [enteredUserName, setEnteredUserName] = useState('');
+
 
   const emailHandler = email => {
     setEnteredEmail(email);
@@ -196,8 +198,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   helper: {
-    marginBottom: -15
-  }
+    marginBottom: -15,
+  },
 });
 
 export default RegisterScreen;
