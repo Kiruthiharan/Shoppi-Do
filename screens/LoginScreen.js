@@ -22,11 +22,11 @@ function LoginScreen(props) {
   const [emailValid, setEmailValid] = useState(true);
 
   const emailHandler = email => {
-    if (email.trim().length === 0){
-      setEmailValid(false)
-    } else {
-      setEmailValid(true)
-    } 
+    // if (enteredEmail.length === 0){
+    //   setEmailValid(false)
+    // } else {
+    //   setEmailValid(true)
+    // } 
 
     setEnteredEmail(email);
   };
@@ -72,7 +72,7 @@ function LoginScreen(props) {
             <Form>
               <Item floatingLabel>
                 <Label style={styles.label}>Email</Label>
-                <Input onKeyPress={emailHandler} onChangeText={emailHandler} value={enteredEmail} />
+                <Input onChangeText={emailHandler} value={enteredEmail} />
               </Item>
               <HelperText style={styles.helper} type="error" visible={!emailValid}>
                 Email address is invalid!

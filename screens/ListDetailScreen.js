@@ -147,8 +147,9 @@ function ListDetailScreen(props) {
             data={pendingList}
             renderItem={renderDoneItem}
             numColumns={1}
+            contentContainerStyle={styles.list}
           />
-          {pendingList.length === 0 ? <Text> *No pending items</Text>: null}
+          {pendingList.length === 0 ? <Text style={styles.list}> *No pending items</Text>: null}
         </View>
 
         <View>
@@ -157,6 +158,7 @@ function ListDetailScreen(props) {
             data={doneList}
             renderItem={renderPendingItem}
             numColumns={1}
+            contentContainerStyle={styles.list}
           />
         </View>
       </View>
@@ -193,6 +195,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
+  list:{
+    marginHorizontal: 5
+  },
   lists: {
     flexGrow: 1,
     alignContent: 'center',
@@ -214,9 +219,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   todoGrid: {
-    flex: 1,
-    borderRadius: 20,
+    paddingVertical: 5,
     paddingHorizontal: 10,
+    marginVertical: 5
   },
   addBtn: {
     marginHorizontal: 5,
