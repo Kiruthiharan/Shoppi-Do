@@ -149,9 +149,10 @@ function ListDetailScreen(props) {
             numColumns={1}
             contentContainerStyle={styles.list}
           />
-          {pendingList.length === 0 ? <Text style={styles.list}> *No pending items</Text>: null}
+          {pendingList.length === 0 ? <Text style={styles.info}> *No pending items</Text>: null}
         </View>
 
+        {doneList.length === 0 ? null: 
         <View>
           <Text style={styles.heading}>Done Items</Text>
           <FlatList
@@ -160,7 +161,7 @@ function ListDetailScreen(props) {
             numColumns={1}
             contentContainerStyle={styles.list}
           />
-        </View>
+        </View>}
       </View>
 
       <View style={styles.inputContainer}>
@@ -195,8 +196,13 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
+  info: {
+    alignSelf: 'center',
+  },
   list:{
-    marginHorizontal: 5
+    marginHorizontal: 5,
+    alignContent: 'center',
+    justifyContent: 'center'
   },
   lists: {
     flexGrow: 1,
