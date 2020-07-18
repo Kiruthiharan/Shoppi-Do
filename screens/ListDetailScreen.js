@@ -5,18 +5,18 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  TextInput,
   TouchableOpacity,
   Button,
 } from 'react-native';
 import {LISTS} from '../data/dummy-data';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
-
+import {TextInput} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Card} from 'native-base';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const user = auth().currentUser;
 
@@ -25,6 +25,7 @@ function ListDetailScreen(props) {
   const [listItems, setListItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState('');
+  const [qty, setQty] = useState('');
   const [list, setList] = useState('');
   const [doneList, setDoneList] = useState([]);
   const [pendingList, setPendingList] = useState([]);
@@ -42,9 +43,7 @@ function ListDetailScreen(props) {
         setList(documentSnapshot.data());
       }
     });
-    return () => {
-      console.log(list);
-    };
+    return () => {};
   }, [listId]);
 
   useEffect(() => {
@@ -80,17 +79,23 @@ function ListDetailScreen(props) {
     setItem(item);
   };
 
+  const handleQty = qty => {
+    setQty(qty);
+  };
+
   const addItem = () => {
     dbRef
       .collection('items')
       .add({
         name: item,
         done: false,
+        qty: qty,
       })
       .then(() => {
         console.log('Item Added');
       });
     setItem('');
+    setQty('');
   };
 
   const toggleDone = (id, status) => {
@@ -139,7 +144,7 @@ function ListDetailScreen(props) {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView style={styles.root}>
       <View style={styles.lists}>
         <View>
           <Text style={styles.heading}>Pending Items</Text>
@@ -149,19 +154,22 @@ function ListDetailScreen(props) {
             numColumns={1}
             contentContainerStyle={styles.list}
           />
-          {pendingList.length === 0 ? <Text style={styles.info}> *No pending items</Text>: null}
+          {pendingList.length === 0 ? (
+            <Text style={styles.info}> *No pending items</Text>
+          ) : null}
         </View>
 
-        {doneList.length === 0 ? null: 
-        <View>
-          <Text style={styles.heading}>Done Items</Text>
-          <FlatList
-            data={doneList}
-            renderItem={renderPendingItem}
-            numColumns={1}
-            contentContainerStyle={styles.list}
-          />
-        </View>}
+        {doneList.length === 0 ? null : (
+          <View>
+            <Text style={styles.heading}>Done Items</Text>
+            <FlatList
+              data={doneList}
+              renderItem={renderPendingItem}
+              numColumns={1}
+              contentContainerStyle={styles.list}
+            />
+          </View>
+        )}
       </View>
 
       <View style={styles.inputContainer}>
@@ -169,12 +177,21 @@ function ListDetailScreen(props) {
           style={styles.input}
           value={item}
           onChangeText={handleItem}
+          mode="outlined"
+          label="Item"
+        />
+        <TextInput
+          style={styles.inputQty}
+          value={qty}
+          onChangeText={handleQty}
+          mode="outlined"
+          label="Qty"
         />
         <View style={styles.addBtn}>
           <Button title="Add" onPress={addItem} />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -199,10 +216,10 @@ const styles = StyleSheet.create({
   info: {
     alignSelf: 'center',
   },
-  list:{
+  list: {
     marginHorizontal: 5,
     alignContent: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   lists: {
     flexGrow: 1,
@@ -216,21 +233,29 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {
-    flex: 1,
+    flex: 2,
     backgroundColor: 'white',
     margin: 5,
-    borderRadius: 30,
     padding: 10,
+    height: 45,
+  },
+  inputQty: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 10,
+    height: 45,
   },
   todoGrid: {
     paddingVertical: 5,
     paddingHorizontal: 10,
-    marginVertical: 5
+    marginVertical: 5,
   },
   addBtn: {
     marginHorizontal: 5,
+    height: 45,
   },
   doneItem: {
     textDecorationLine: 'line-through',
