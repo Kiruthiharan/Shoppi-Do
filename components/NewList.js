@@ -8,20 +8,23 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import { Input } from 'native-base';
+import {Input} from 'native-base';
+import {RadioButton} from 'react-native-paper';
 
 const NewList = props => {
   const [enteredList, setEnteredList] = useState('');
+  const [checked, setChecked] = useState('blue');
 
   const handleListName = listName => {
     setEnteredList(listName);
   };
 
   const handleSubmit = () => {
-    props.addNew(enteredList);
+    props.addNew(enteredList, checked);
     setEnteredList('');
     props.close();
   };
+
   return (
     <View>
       <View style={styles.closeContainer}>
@@ -36,6 +39,37 @@ const NewList = props => {
           value={enteredList}
           onChangeText={handleListName}
         />
+        <View style={styles.colorInput}>
+          <Text>Color: </Text>
+          <RadioButton
+            value="blue"
+            status={checked === 'blue' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked('blue')}
+            color="#4c79fb"
+            uncheckedColor="#4c79fb"
+          />
+          <RadioButton
+            value="green"
+            status={checked === 'green' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked('green')}
+            color="#48cc64"
+            uncheckedColor="#48cc64"
+          />
+          <RadioButton
+            value="yellow"
+            status={checked === 'yellow' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked('yellow')}
+            color="#fdbb00"
+            uncheckedColor="#fdbb00"
+          />
+          <RadioButton
+            value="purple"
+            status={checked === 'purple' ? 'checked' : 'unchecked'}
+            onPress={() => setChecked('purple')}
+            color="#9f50e3"
+            uncheckedColor="#9f50e3"
+          />
+        </View>
         <Button onPress={handleSubmit} title="Add" />
       </View>
     </View>
@@ -49,7 +83,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: -25,
-    zIndex: 100
+    zIndex: 100,
   },
   close: {
     width: 50,
@@ -74,9 +108,14 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   input: {
-    width: 100,
+    width: '60%',
     borderBottomWidth: 1,
     marginBottom: 15,
+  },
+  colorInput: {
+    flexDirection: 'row',
+    marginVertical: 10,
+    alignItems: 'center'
   },
 });
 

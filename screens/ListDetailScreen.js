@@ -56,6 +56,7 @@ function ListDetailScreen(props) {
           id: documentSnapshot.id,
           name: documentSnapshot.data().name,
           done: documentSnapshot.data().done,
+          qty: documentSnapshot.data().qty,
         };
         if (documentSnapshot.data().done) {
           doneItems.push(item);
@@ -109,23 +110,6 @@ function ListDetailScreen(props) {
       });
   };
 
-  const renderDoneItem = itemData => {
-    return (
-      <Card style={styles.todoGrid}>
-        <TouchableOpacity
-          style={styles.item}
-          activeOpacity={0.7}
-          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
-          <CheckBox
-            value={itemData.item.done}
-            onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
-          />
-          <Text style={styles.title}>{itemData.item.name}</Text>
-        </TouchableOpacity>
-      </Card>
-    );
-  };
-
   const renderPendingItem = itemData => {
     return (
       <Card style={styles.todoGrid}>
@@ -137,20 +121,43 @@ function ListDetailScreen(props) {
             value={itemData.item.done}
             onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
           />
-          <Text style={styles.doneItem}>{itemData.item.name}</Text>
+          <View style={styles.itemQty}>
+            <Text style={styles.title}>{itemData.item.name}</Text>
+            <Text style={styles.title}>{itemData.item.qty}</Text>
+          </View>
+        </TouchableOpacity>
+      </Card>
+    );
+  };
+
+  const renderDoneItem = itemData => {
+    return (
+      <Card style={styles.todoGrid}>
+        <TouchableOpacity
+          style={styles.item}
+          activeOpacity={0.7}
+          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
+          <CheckBox
+            value={itemData.item.done}
+            onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
+          />
+          <View style={styles.itemQty}>
+            <Text style={styles.doneItem}>{itemData.item.name}</Text>
+            <Text style={styles.doneItem}>{itemData.item.qty}</Text>
+          </View>
         </TouchableOpacity>
       </Card>
     );
   };
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView contentContainerStyle={styles.root} >
       <View style={styles.lists}>
         <View>
           <Text style={styles.heading}>Pending Items</Text>
           <FlatList
             data={pendingList}
-            renderItem={renderDoneItem}
+            renderItem={renderPendingItem}
             numColumns={1}
             contentContainerStyle={styles.list}
           />
@@ -164,7 +171,7 @@ function ListDetailScreen(props) {
             <Text style={styles.heading}>Done Items</Text>
             <FlatList
               data={doneList}
-              renderItem={renderPendingItem}
+              renderItem={renderDoneItem}
               numColumns={1}
               contentContainerStyle={styles.list}
             />
@@ -211,7 +218,7 @@ function ListDetailScreen(props) {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
+    flexGrow: 1,
   },
   info: {
     alignSelf: 'center',
@@ -265,6 +272,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     fontSize: 18,
     alignSelf: 'center',
+  },
+  itemQty: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
   },
 });
 

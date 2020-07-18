@@ -84,7 +84,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         tabBarIcon: tabInfo => {
           return <Icon name="bell" size={23} color={tabInfo.tintColor} />;
         },
-        tabBarColor: 'red'
+        
       },
     },
     Profile: {
@@ -93,7 +93,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         tabBarIcon: tabInfo => {
           return <Icon name="user" size={23} color={tabInfo.tintColor} />;
         },
-        tabBarColor: 'blue'
+        
       },
     },
   },

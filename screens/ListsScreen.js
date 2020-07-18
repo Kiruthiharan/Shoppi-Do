@@ -41,10 +41,11 @@ function ListsScreen(props) {
   const [lists, setLists] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  async function addList(list) {
+  async function addList(list, color) {
     dbRef
       .add({
         name: list,
+        color: color
       })
       .then(() => {
         console.log('List Added');
@@ -57,7 +58,7 @@ function ListsScreen(props) {
     return dbRef.onSnapshot(querySnapshot => {
       const list = [];
       querySnapshot.forEach(doc => {
-        const single = new List(doc.id, doc.data().name, 'red');
+        const single = new List(doc.id, doc.data().name, doc.data().color);
         list.push(single);
       });
 
@@ -70,7 +71,7 @@ function ListsScreen(props) {
   }, []);
 
   if (loading) {
-    return <Text>Aasd</Text>;
+    return <Text>loading....</Text>;
   }
 
   const deleteItem = id => {
@@ -119,7 +120,7 @@ function ListsScreen(props) {
             style={styles.linearGradient}>
             <View>
               <Text style={styles.title}>{itemData.item.title}</Text>
-              <Text style={styles.footer}>{itemData.item.title}</Text>
+              <Text style={styles.footer}>{itemData.item.color}</Text>
             </View>
           </LinearGradient>
         </TouchableOpacity>
