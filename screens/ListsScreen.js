@@ -29,6 +29,7 @@ import auth from '@react-native-firebase/auth';
 import List from '../models/list';
 import {Fab} from 'native-base';
 import NewList from '../components/NewList';
+import EditList from '../components/EditList';
 
 const user = auth().currentUser;
 
@@ -40,6 +41,8 @@ function ListsScreen(props) {
   const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
 
   async function addList(list, color) {
     dbRef
@@ -52,6 +55,19 @@ function ListsScreen(props) {
       });
     setEnteredList('');
     toggleModal();
+  }
+
+  async function editList(list, color) {
+    dbRef.doc(currentItem.id)
+      .set({
+        name: list,
+        color: color
+      })
+      .then(() => {
+        console.log('List Edited');
+      });
+    setEnteredList('');
+    toggleEdit();
   }
 
   useEffect(() => {
@@ -81,8 +97,9 @@ function ListsScreen(props) {
       .then(() => console.log('deleted'));
   };
 
-  const updateItem = id => {
-    toggleModal()
+  const updateItem = item => {
+    setCurrentItem(item)
+    toggleEdit()
   };
 
   const renderGridItem = itemData => {
@@ -95,7 +112,7 @@ function ListsScreen(props) {
       </TouchableHighlight>,
       <TouchableHighlight
         style={styles.slideIcon}
-        onPress={() => updateItem(itemData.item.id)}>
+        onPress={() => updateItem(itemData.item)}>
         <MaterialIcons name="edit" size={25} color={'black'} />
       </TouchableHighlight>,
     ];
@@ -132,6 +149,10 @@ function ListsScreen(props) {
     setModalVisible(!isModalVisible);
   };
 
+  const toggleEdit = () => {
+    setIsEditMode(!isEditMode);
+  }
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -146,6 +167,13 @@ function ListsScreen(props) {
         onBackButtonPress={toggleModal}
         style={styles.modal}>
         <NewList close={toggleModal} addNew={addList} />
+      </Modal>
+      <Modal
+        isVisible={isEditMode}
+        avoidKeyboard={true}
+        onBackButtonPress={toggleEdit}
+        style={styles.modal}>
+        <EditList close={toggleEdit} item={currentItem} editList={editList} />
       </Modal>
     </KeyboardAvoidingView>
   );
