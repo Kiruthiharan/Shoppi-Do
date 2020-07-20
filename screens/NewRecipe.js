@@ -7,11 +7,12 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import {Label, DatePicker, Fab} from 'native-base';
+import {Label, DatePicker, Fab, Card} from 'native-base';
 import {TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {FlatList} from 'react-native-gesture-handler';
 
 const user = auth().currentUser;
 
@@ -19,6 +20,7 @@ function NewRecipeScreen(props) {
   const [name, setName] = useState('');
   const [recipe, setRecipe] = useState('');
   const [currentItem, setCurrentItem] = useState('');
+  const [currentQty, setCurrentQty] = useState('');
   const [items, setItems] = useState([]);
 
   const handleName = name => {
@@ -33,17 +35,46 @@ function NewRecipeScreen(props) {
     setCurrentItem(item);
   };
 
-  const handleItemList = item => {
-    setItems(oldItems => [...oldItems, currentItem]);
+  const handleCurrentQty = qty => {
+    setCurrentQty(qty);
   };
+
+  const handleItemList = item => {
+    const newItem = {id: Math.random(), item: currentItem, qty: currentQty};
+    setItems(oldItems => [...oldItems, newItem]);
+  };
+
+  const deleteItem = deleteItem => {
+      const newList = items.filter(item => {
+          return item.id != deleteItem.id
+      })
+      setItems(newList);
+  }
 
   const handleSubmit = () => {
     // dbRef.add({
     //   name: name,
-    //   time: time,
+    //   recipe: recipe,
     //   date: date
     // })
     console.log(name, recipe, items);
+  };
+
+  const renderRecipeItem = itemData => {
+    return (
+      <View style={styles.itemCardContainer}>
+        <Card style={styles.itemCard}>
+          <Text>{itemData.item.item}</Text>
+          <Text>{itemData.item.qty}</Text>
+        </Card>
+
+        <TouchableOpacity
+          onPress={deleteItem.bind(this, itemData.item)}
+          style={{marginHorizontal: 15}}>
+          <Icon name="minus" size={24} />
+        </TouchableOpacity>
+      </View>
+    );
   };
 
   return (
@@ -71,8 +102,8 @@ function NewRecipeScreen(props) {
         <TextInput
           label="Item"
           mode="outlined"
-          value={currentItem}
-          onChangeText={handleCurrentItem}
+          value={currentQty}
+          onChangeText={handleCurrentQty}
           style={styles.qty}
         />
 
@@ -86,6 +117,7 @@ function NewRecipeScreen(props) {
       <Fab position="bottomRight" onPress={handleSubmit}>
         <Icon name="check" />
       </Fab>
+      <FlatList data={items} renderItem={renderRecipeItem} numColumns={1} />
     </View>
   );
 }
@@ -103,11 +135,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   item: {
-      flex: 2
+    flex: 2,
   },
   qty: {
-      flex: 1,
-      marginLeft: 5
+    flex: 1,
+    marginLeft: 5,
+  },
+  itemCard: {
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    paddingVertical: 10
+  },
+  itemCardContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center'
   }
 });
 
