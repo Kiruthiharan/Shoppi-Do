@@ -43,6 +43,7 @@ function ListDetailScreen(props) {
         setList(documentSnapshot.data());
       }
     });
+    props.navigation.setParams({listName: list.name})
     return () => {};
   }, [listId]);
 
@@ -202,19 +203,19 @@ function ListDetailScreen(props) {
   );
 }
 
-// ListDetailScreen.navigationOptions = navigationData => {
-//   const listId = navigationData.navigation.getParam('listId');
-//   const selectedList = LISTS.find(list => list.id === listId);
+ListDetailScreen.navigationOptions = navigationData => {
+  const title = navigationData.navigation.getParam('listName');
+  console.log(navigationData)
 
-//   return {
-//     headerTitle: selectedList.title,
-//     headerRight: () => (
-//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-//         <Item title="Fav" iconName="rocket" onPress={() => {}} />
-//       </HeaderButtons>
-//     ),
-//   };
-// };
+  return {
+    headerTitle: title,
+    // headerRight: () => (
+    //   <HeaderButtons HeaderButtonComponent={HeaderButton}>
+    //     <Item title="Fav" iconName="rocket" onPress={() => {}} />
+    //   </HeaderButtons>
+    // ),
+  };
+};
 
 const styles = StyleSheet.create({
   root: {
