@@ -26,7 +26,7 @@ function LoginScreen(props) {
     //   setEmailValid(false)
     // } else {
     //   setEmailValid(true)
-    // } 
+    // }
 
     setEnteredEmail(email);
   };
@@ -64,9 +64,13 @@ function LoginScreen(props) {
       style={styles.container}
       keyboardVerticalOffset={-300}>
       <ScrollView contentContainerStyle={styles.scroller}>
-        <View style={styles.header}>
-          <Text style={styles.text_header}>Welcome Back!</Text>
-        </View>
+        
+          <View
+            style={styles.header}>
+            <Text style={styles.text_header}>Welcome Back!</Text>
+          </View>
+          
+        
         <View style={styles.footer}>
           <Content>
             <Form>
@@ -74,12 +78,19 @@ function LoginScreen(props) {
                 <Label style={styles.label}>Email</Label>
                 <Input onChangeText={emailHandler} value={enteredEmail} />
               </Item>
-              <HelperText style={styles.helper} type="error" visible={!emailValid}>
+              <HelperText
+                style={styles.helper}
+                type="error"
+                visible={!emailValid}>
                 Email address is invalid!
               </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Password</Label>
-                <Input onChangeText={passwordHandler} value={enteredPassword} secureTextEntry={true}/>
+                <Input
+                  onChangeText={passwordHandler}
+                  value={enteredPassword}
+                  secureTextEntry={true}
+                />
               </Item>
               <HelperText type="error" visible={true}>
                 Email address is invalid!
@@ -191,8 +202,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   helper: {
-    marginBottom: -10
-  }
+    marginBottom: -10,
+  },
 });
 
 export default LoginScreen;

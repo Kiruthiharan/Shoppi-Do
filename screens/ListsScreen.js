@@ -22,6 +22,7 @@ import auth from '@react-native-firebase/auth';
 import List from '../models/list';
 import NewList from '../components/NewList';
 import EditList from '../components/EditList';
+import  Colors  from '../constants/Colors';
 
 const user = auth().currentUser;
 
@@ -108,9 +109,19 @@ function ListsScreen(props) {
         <MaterialIcons name="edit" size={25} color={'black'} />
       </TouchableHighlight>,
     ];
+    let listColor = []
+    if (itemData.item.color === "yellow"){
+      listColor = Colors.yellowGradient
+    } else if (itemData.item.color === "blue"){
+      listColor = Colors.blueGradient
+    } else if (itemData.item.color === "purple"){
+      listColor = Colors.purpleGradient
+    } else if (itemData.item.color === "green"){
+      listColor = Colors.greenGradient
+    }
 
     return (
-      <Swipeable rightButtons={rightButtons}>
+      <Swipeable rightButtons={rightButtons} reCenter>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
@@ -124,13 +135,12 @@ function ListsScreen(props) {
           }}
           onLongPress={() => console.log('long')}>
           <LinearGradient
-            start={{x: 0, y: 0}}
-            end={{x: 1, y: 0}}
-            colors={['#39A1F7', '#718BFB', '#A875FF']}
+            end={{x: 0, y: 0}}
+            start={{x: 1, y: 1}}
+            colors={listColor}
             style={styles.linearGradient}>
             <View>
               <Text style={styles.title}>{itemData.item.title}</Text>
-              <Text style={styles.footer}>{itemData.item.color}</Text>
             </View>
           </LinearGradient>
         </TouchableOpacity>
@@ -206,7 +216,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   title: {
-    fontWeight: 'bold',
+    fontSize: 24,
     color: 'white',
     margin: 10,
   },

@@ -16,6 +16,7 @@ import {Card} from 'native-base';
 import {ScrollView} from 'react-native-gesture-handler';
 import Swipeable from 'react-native-swipeable-row';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../constants/Colors';
 
 const user = auth().currentUser;
 
@@ -166,7 +167,8 @@ function ListDetailScreen(props) {
     ];
     return (
       <Swipeable rightButtons={rightButtons}>
-        <Card style={styles.todoGrid}>
+        <View style={styles.todoGrid}>
+        <Card >
           <TouchableOpacity
             style={styles.item}
             activeOpacity={0.7}
@@ -185,6 +187,8 @@ function ListDetailScreen(props) {
             </View>
           </TouchableOpacity>
         </Card>
+        </View>
+        
       </Swipeable>
     );
   };
@@ -282,11 +286,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 5,
     alignItems: 'center',
+    
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    
   },
   input: {
     flex: 2,
@@ -302,9 +308,7 @@ const styles = StyleSheet.create({
     height: 45,
   },
   todoGrid: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginVertical: 5,
+    paddingHorizontal: 5
   },
   addBtn: {
     marginHorizontal: 5,

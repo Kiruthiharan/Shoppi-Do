@@ -22,9 +22,9 @@ import NewRecipeScreen from '../screens/NewRecipeScreen';
 // header styles should change font
 const NavOptions = {
   headerStyle: {
-    backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : '',
+    backgroundColor: Platform.OS === 'android' ? Colors.headerColor : '',
   },
-  headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor,
+  headerTintColor: Platform.OS === 'android' ? 'white' : Colors.headerColor,
 };
 
 const ListNavigator = createStackNavigator(
@@ -81,6 +81,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         tabBarIcon: tabInfo => {
           return <Icon name="tasks" size={23} color={tabInfo.tintColor} />;
         },
+        tabBarColor: Colors.headerColor
       },
     },
     Remainders: {
@@ -90,6 +91,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
         tabBarIcon: tabInfo => {
           return <Icon name="cutlery" size={23} color={tabInfo.tintColor} />;
         },
+        tabBarColor: Colors.headerColor
         
       },
     },
@@ -99,13 +101,14 @@ const TabNavigator = createMaterialBottomTabNavigator(
         tabBarIcon: tabInfo => {
           return <Icon name="user" size={23} color={tabInfo.tintColor} />;
         },
-        
+        tabBarColor: Colors.headerColor
       },
     },
   },
   {
-    activeTintColor: Colors.accentColor,
-    shifting: true
+    
+    activeTintColor: Colors.headerColor,
+    shifting: true,
   },
 );
 
