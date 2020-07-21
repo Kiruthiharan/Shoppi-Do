@@ -11,6 +11,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import RemainderScreen from '../screens/RemainderScreen';
+import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-view';
@@ -53,14 +54,14 @@ const ProfileNavigator = createStackNavigator(
 
 const RemainderNavigator = createStackNavigator(
   {
-    Remainder: {
+    Recipes: {
       screen: RemainderScreen,
     },
-    NewRemainder: {
+    NewRecipe: {
       screen: NewRecipe,
     },
-    EditRemainder: {
-      screen: EditRemainderScreen,
+    RecipeDetail: {
+      screen: RecipeDetailScreen,
     },
   },
   {

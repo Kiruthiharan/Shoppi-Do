@@ -23,9 +23,7 @@ function RemainderScreen(props) {
   const [remainders, setRemainders] = useState([]);
 
   const dbRef = firestore()
-    .collection('users')
-    .doc(user.uid)
-    .collection('Remainders');
+    .collection('recipes');
 
   useEffect(() => {
     return dbRef.onSnapshot(querySnapshot => {
@@ -36,8 +34,7 @@ function RemainderScreen(props) {
         remainders.push({
           id: doc.id,
           name: doc.data().name,
-          time: doc.data().time,
-          date: doc.data().date,
+          recipe: doc.data().recipe,
         });
       });
 
@@ -55,9 +52,9 @@ function RemainderScreen(props) {
         activeOpacity={0.7}
         onPress={() => {
           props.navigation.navigate({
-            routeName: 'EditRemainder',
+            routeName: 'RecipeDetail',
             params: {
-              remainderId: itemData.item.id,
+              recipeId: itemData.item.id,
             },
           });
         }}>
@@ -65,8 +62,7 @@ function RemainderScreen(props) {
           <View>
             <Text style={styles.title}>{itemData.item.name}</Text>
             <View style={styles.dateTimeContainer}>
-              <Text style={styles.footer}>{itemData.item.time}</Text>
-              <Text style={styles.footer}>{itemData.item.date}</Text>
+              <Text style={styles.footer}>{itemData.item.recipe}</Text>
             </View>
           </View>
         </Card>
@@ -79,7 +75,7 @@ function RemainderScreen(props) {
       <FlatList data={remainders} renderItem={renderGridItem} numColumns={1} />
       <Fab
         position="bottomRight"
-        onPress={() => props.navigation.navigate('NewRemainder')}>
+        onPress={() => props.navigation.navigate('NewRecipe')}>
         <Icon name="add" />
       </Fab>
     </View>

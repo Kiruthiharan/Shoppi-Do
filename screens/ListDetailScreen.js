@@ -22,6 +22,7 @@ const user = auth().currentUser;
 
 function ListDetailScreen(props) {
   const listId = props.navigation.getParam('listId');
+
   const [listItems, setListItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState('');
@@ -39,11 +40,9 @@ function ListDetailScreen(props) {
   useEffect(() => {
     dbRef.get().then(documentSnapshot => {
       if (documentSnapshot.exists) {
-        console.log('List data: ', documentSnapshot.data());
         setList(documentSnapshot.data());
       }
     });
-    props.navigation.setParams({listName: list.name})
     return () => {};
   }, [listId]);
 
@@ -152,7 +151,7 @@ function ListDetailScreen(props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.root} >
+    <ScrollView contentContainerStyle={styles.root}>
       <View style={styles.lists}>
         <View>
           <Text style={styles.heading}>Pending Items</Text>
@@ -205,15 +204,15 @@ function ListDetailScreen(props) {
 
 ListDetailScreen.navigationOptions = navigationData => {
   const title = navigationData.navigation.getParam('listName');
-  console.log(navigationData)
+  console.log(navigationData);
 
   return {
     headerTitle: title,
-    // headerRight: () => (
-    //   <HeaderButtons HeaderButtonComponent={HeaderButton}>
-    //     <Item title="Fav" iconName="rocket" onPress={() => {}} />
-    //   </HeaderButtons>
-    // ),
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item title="Fav" iconName="rocket" onPress={() => {}} />
+      </HeaderButtons>
+    ),
   };
 };
 

@@ -126,6 +126,7 @@ function ListsScreen(props) {
               routeName: 'ListDetail',
               params: {
                 listId: itemData.item.id,
+                listName: itemData.item.title,
               },
             });
           }}

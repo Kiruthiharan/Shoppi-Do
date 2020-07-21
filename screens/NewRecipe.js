@@ -23,6 +23,8 @@ function NewRecipeScreen(props) {
   const [currentQty, setCurrentQty] = useState('');
   const [items, setItems] = useState([]);
 
+  const dbRef = firestore().collection('recipes');
+
   const handleName = name => {
     setName(name);
   };
@@ -45,18 +47,33 @@ function NewRecipeScreen(props) {
   };
 
   const deleteItem = deleteItem => {
-      const newList = items.filter(item => {
-          return item.id != deleteItem.id
-      })
-      setItems(newList);
-  }
+    const newList = items.filter(item => {
+      return item.id != deleteItem.id;
+    });
+    setItems(newList);
+  };
 
   const handleSubmit = () => {
-    // dbRef.add({
-    //   name: name,
-    //   recipe: recipe,
-    //   date: date
-    // })
+    dbRef
+      .add({
+        name: name,
+        recipe: recipe,
+        owner: user.uid
+      })
+      .then(docRef => {
+        console.log(docRef.id);
+        items.forEach(item => {
+          dbRef.doc(docRef.id).collection("ingredients").add({
+            item: item.item,
+            qty: item.qty
+          })
+        })
+        
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
     console.log(name, recipe, items);
   };
 
@@ -90,6 +107,8 @@ function NewRecipeScreen(props) {
         mode="outlined"
         value={recipe}
         onChangeText={handleRecipe}
+        multiline={true}
+        style={styles.recipeInput}
       />
       <View style={styles.newItem}>
         <TextInput
@@ -100,7 +119,7 @@ function NewRecipeScreen(props) {
           style={styles.item}
         />
         <TextInput
-          label="Item"
+          label="Qty"
           mode="outlined"
           value={currentQty}
           onChangeText={handleCurrentQty}
@@ -113,11 +132,10 @@ function NewRecipeScreen(props) {
           <Icon name="plus" size={24} />
         </TouchableOpacity>
       </View>
-
+      <FlatList data={items} renderItem={renderRecipeItem} numColumns={1} />
       <Fab position="bottomRight" onPress={handleSubmit}>
         <Icon name="check" />
       </Fab>
-      <FlatList data={items} renderItem={renderRecipeItem} numColumns={1} />
     </View>
   );
 }
@@ -146,12 +164,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingHorizontal: 10,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   itemCardContainer: {
     flexDirection: 'row',
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  recipeInput: {
+    maxHeight: '50%'
   }
 });
 
