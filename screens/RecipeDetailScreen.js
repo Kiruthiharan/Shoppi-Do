@@ -7,14 +7,14 @@ import {
   Platform,
   TouchableOpacity,
 } from 'react-native';
-import {Label, DatePicker, Fab} from 'native-base';
+import {Label, DatePicker, Fab, Card} from 'native-base';
 import {TextInput} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-import { FlatList } from 'react-native-gesture-handler';
-import { ListItem } from 'react-native-elements';
+import {FlatList} from 'react-native-gesture-handler';
+import {ListItem} from 'react-native-elements';
 
 const user = auth().currentUser;
 
@@ -33,7 +33,7 @@ function RecipeDetailScreen(props) {
         name: documentSnapshot.data().name,
         recipe: documentSnapshot.data().recipe,
       };
-      setRecipe(recipe)
+      setRecipe(recipe);
     });
 
     dbRef.collection('ingredients').onSnapshot(querySnapshot => {
@@ -54,39 +54,60 @@ function RecipeDetailScreen(props) {
   }, [recipeId]);
 
   const renderIngredient = itemData => {
-      return <ListItem key={itemData.item.id} rightTitle={itemData.item.qty} title={itemData.item.item}/>
-  }
+    return (
+      <ListItem
+        key={itemData.item.id}
+        rightTitle={itemData.item.qty}
+        title={itemData.item.item}
+        bottomDivider
+      />
+    );
+  };
 
   return (
     <View style={styles.root}>
-      <Text>{recipe.name}</Text>
-      <Text>{recipe.recipe}</Text>
-      <FlatList renderItem={renderIngredient} data={ingredients}/>
+      <Text style={styles.heading}>Instructions</Text>
+      <Card style={styles.recipeContainer}>
+        <Text>{recipe.recipe}</Text>
+      </Card>
+
+      <Text style={styles.heading}>Ingredients</Text>
+      <FlatList
+        renderItem={renderIngredient}
+        data={ingredients}
+        contentContainerStyle={styles.ingredients}
+      />
     </View>
   );
 }
+
+RecipeDetailScreen.navigationOptions = navigationData => {
+  const title = navigationData.navigation.getParam('recipeName');
+  return {
+    headerTitle: title,
+  };
+};
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
     alignContent: 'center',
-    paddingHorizontal: 15,
+    padding: 15,
   },
-  dateTime: {
-    marginVertical: 10,
-    justifyContent: 'space-around',
+  ingredients: {
+    flexGrow: 1,
+    maxHeight: '50%',
   },
-  dateContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  recipeContainer: {
+    marginBottom: 15,
+    padding: 10,
   },
-  timeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  input: {
-    width: '80%',
-  },
+  heading: {
+    textAlign: 'center',
+    paddingBottom: 5,
+    fontSize: 20,
+    fontWeight: 'bold'
+  }
 });
 
 export default RecipeDetailScreen;

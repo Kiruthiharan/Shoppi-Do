@@ -76,15 +76,16 @@ const TabNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: 'Lists',
         tabBarIcon: tabInfo => {
-          return <Icon name="list-alt" size={23} color={tabInfo.tintColor} />;
+          return <Icon name="tasks" size={23} color={tabInfo.tintColor} />;
         },
       },
     },
     Remainders: {
       screen: RemainderNavigator,
       navigationOptions: {
+        tabBarLabel: 'Recipes',
         tabBarIcon: tabInfo => {
-          return <Icon name="bell" size={23} color={tabInfo.tintColor} />;
+          return <Icon name="cutlery" size={23} color={tabInfo.tintColor} />;
         },
         
       },

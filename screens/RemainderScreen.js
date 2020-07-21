@@ -15,6 +15,7 @@ import firestore from '@react-native-firebase/firestore';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../constants/Colors';
 import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
+import {ListItem} from 'react-native-elements';
 
 const user = auth().currentUser;
 
@@ -55,17 +56,23 @@ function RemainderScreen(props) {
             routeName: 'RecipeDetail',
             params: {
               recipeId: itemData.item.id,
+              recipeName: itemData.item.name
             },
           });
         }}>
-        <Card style={styles.card}>
+        {/* <Card style={styles.card}>
           <View>
             <Text style={styles.title}>{itemData.item.name}</Text>
             <View style={styles.dateTimeContainer}>
               <Text style={styles.footer}>{itemData.item.recipe}</Text>
             </View>
           </View>
-        </Card>
+        </Card> */}
+        <ListItem 
+        style={styles.recipeItem}
+        key={itemData.item.id}
+        title={itemData.item.name}
+        chevron={true}/>
       </TouchableOpacity>
     );
   };
@@ -91,6 +98,10 @@ const styles = StyleSheet.create({
     elevation: 5,
     height: 50,
     marginHorizontal: 200,
+  },
+  recipeItem: {
+    margin:5,
+    marginHorizontal: 10
   },
   dateTimeContainer: {
     flexDirection:'row',
