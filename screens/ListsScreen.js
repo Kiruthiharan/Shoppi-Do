@@ -1,4 +1,4 @@
-import React, {createRef, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,28 +6,20 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   FlatList,
-  TextInput,
   KeyboardAvoidingView,
-  Button,
-  ScrollView,
-  Alert,
 } from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import FAB from '../components/UI/FAB';
 
-import {Colors} from '../constants/Colors';
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeable from 'react-native-swipeable-row';
-import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ActionSheet from 'react-native-actions-sheet';
 import Modal from 'react-native-modal';
 
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import List from '../models/list';
-import {Fab} from 'native-base';
 import NewList from '../components/NewList';
 import EditList from '../components/EditList';
 
@@ -48,7 +40,7 @@ function ListsScreen(props) {
     dbRef
       .add({
         name: list,
-        color: color
+        color: color,
       })
       .then(() => {
         console.log('List Added');
@@ -58,10 +50,11 @@ function ListsScreen(props) {
   }
 
   async function editList(list, color) {
-    dbRef.doc(currentItem.id)
+    dbRef
+      .doc(currentItem.id)
       .set({
         name: list,
-        color: color
+        color: color,
       })
       .then(() => {
         console.log('List Edited');
@@ -98,12 +91,11 @@ function ListsScreen(props) {
   };
 
   const updateItem = item => {
-    setCurrentItem(item)
-    toggleEdit()
+    setCurrentItem(item);
+    toggleEdit();
   };
 
   const renderGridItem = itemData => {
-    const leftContent = <Text>Pull to activate</Text>;
     const rightButtons = [
       <TouchableHighlight
         style={styles.slideIcon}
@@ -118,7 +110,7 @@ function ListsScreen(props) {
     ];
 
     return (
-      <Swipeable leftContent={leftContent} rightButtons={rightButtons}>
+      <Swipeable rightButtons={rightButtons}>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
@@ -152,7 +144,7 @@ function ListsScreen(props) {
 
   const toggleEdit = () => {
     setIsEditMode(!isEditMode);
-  }
+  };
 
   return (
     <KeyboardAvoidingView

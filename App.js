@@ -9,6 +9,8 @@ import AppNavigator from './navigation/AppNavigator';
 // improves performance of screen navs
 enableScreens();
 
+console.disableYellowBox = true;
+
 const theme = {
   ...DefaultTheme,
   roundness: 2,

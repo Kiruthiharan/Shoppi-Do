@@ -7,29 +7,30 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
+  TouchableHighlight,
 } from 'react-native';
-import {LISTS} from '../data/dummy-data';
-import {HeaderButtons, Item} from 'react-navigation-header-buttons';
-import HeaderButton from '../components/HeaderButton';
 import {TextInput} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Card} from 'native-base';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {ScrollView} from 'react-native-gesture-handler';
+import Swipeable from 'react-native-swipeable-row';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const user = auth().currentUser;
 
 function ListDetailScreen(props) {
   const listId = props.navigation.getParam('listId');
 
-  const [listItems, setListItems] = useState([]);
+  const [, setListItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState('');
   const [qty, setQty] = useState('');
-  const [list, setList] = useState('');
+  const [, setList] = useState('');
   const [doneList, setDoneList] = useState([]);
   const [pendingList, setPendingList] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [currentItem, setCurrentItem] = useState({});
 
   const dbRef = firestore()
     .collection('users')
@@ -99,6 +100,46 @@ function ListDetailScreen(props) {
     setQty('');
   };
 
+  const deleteItem = id => {
+    dbRef
+      .collection('items')
+      .doc(id)
+      .delete()
+      .then(() => console.log('deleted'));
+  };
+
+  const editItem = (list, color) => {
+    dbRef
+      .collection('items')
+      .doc(currentItem.id)
+      .set({
+        name: item,
+        qty: qty,
+        done: currentItem.done,
+      })
+      .then(() => {
+        console.log('List Edited');
+      });
+    setItem('');
+    setQty('');
+    setCurrentItem({});
+    setEditMode(false);
+  };
+
+  const triggerEdit = item => {
+    setEditMode(true);
+    setItem(item.name);
+    setQty(item.qty);
+    setCurrentItem({id: item.id, done: item.done});
+  };
+
+  const cancelEdit = () => {
+    setItem('');
+    setQty('');
+    setCurrentItem({});
+    setEditMode(false);
+  }
+
   const toggleDone = (id, status) => {
     console.log(id, status);
 
@@ -110,43 +151,41 @@ function ListDetailScreen(props) {
       });
   };
 
-  const renderPendingItem = itemData => {
+  const renderItem = itemData => {
+    const rightButtons = [
+      <TouchableHighlight
+        style={styles.slideIcon}
+        onPress={() => deleteItem(itemData.item.id)}>
+        <MaterialIcons name="delete" size={25} color={'#d11a2a'} />
+      </TouchableHighlight>,
+      <TouchableHighlight
+        style={styles.slideIcon}
+        onPress={() => triggerEdit(itemData.item)}>
+        <MaterialIcons name="edit" size={25} color={'black'} />
+      </TouchableHighlight>,
+    ];
     return (
-      <Card style={styles.todoGrid}>
-        <TouchableOpacity
-          style={styles.item}
-          activeOpacity={0.7}
-          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
-          <CheckBox
-            value={itemData.item.done}
-            onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
-          />
-          <View style={styles.itemQty}>
-            <Text style={styles.title}>{itemData.item.name}</Text>
-            <Text style={styles.title}>{itemData.item.qty}</Text>
-          </View>
-        </TouchableOpacity>
-      </Card>
-    );
-  };
-
-  const renderDoneItem = itemData => {
-    return (
-      <Card style={styles.todoGrid}>
-        <TouchableOpacity
-          style={styles.item}
-          activeOpacity={0.7}
-          onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
-          <CheckBox
-            value={itemData.item.done}
-            onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
-          />
-          <View style={styles.itemQty}>
-            <Text style={styles.doneItem}>{itemData.item.name}</Text>
-            <Text style={styles.doneItem}>{itemData.item.qty}</Text>
-          </View>
-        </TouchableOpacity>
-      </Card>
+      <Swipeable rightButtons={rightButtons}>
+        <Card style={styles.todoGrid}>
+          <TouchableOpacity
+            style={styles.item}
+            activeOpacity={0.7}
+            onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
+            <CheckBox
+              value={itemData.item.done}
+              onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
+            />
+            <View style={styles.itemQty}>
+              <Text style={itemData.item.done ? styles.doneItem : styles.title}>
+                {itemData.item.name}
+              </Text>
+              <Text style={itemData.item.done ? styles.doneItem : styles.title}>
+                {itemData.item.qty}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </Card>
+      </Swipeable>
     );
   };
 
@@ -157,7 +196,7 @@ function ListDetailScreen(props) {
           <Text style={styles.heading}>Pending Items</Text>
           <FlatList
             data={pendingList}
-            renderItem={renderPendingItem}
+            renderItem={renderItem}
             numColumns={1}
             contentContainerStyle={styles.list}
           />
@@ -171,7 +210,7 @@ function ListDetailScreen(props) {
             <Text style={styles.heading}>Done Items</Text>
             <FlatList
               data={doneList}
-              renderItem={renderDoneItem}
+              renderItem={renderItem}
               numColumns={1}
               contentContainerStyle={styles.list}
             />
@@ -195,7 +234,14 @@ function ListDetailScreen(props) {
           label="Qty"
         />
         <View style={styles.addBtn}>
-          <Button title="Add" onPress={addItem} />
+          {editMode ? (
+            <View>
+              <Button title="Edit" onPress={editItem} />
+              <Button title="Cancel" onPress={cancelEdit} />
+            </View>
+          ) : (
+            <Button title="Add" onPress={addItem} />
+          )}
         </View>
       </View>
     </ScrollView>
@@ -208,11 +254,11 @@ ListDetailScreen.navigationOptions = navigationData => {
 
   return {
     headerTitle: title,
-    headerRight: () => (
-      <HeaderButtons HeaderButtonComponent={HeaderButton}>
-        <Item title="Fav" iconName="rocket" onPress={() => {}} />
-      </HeaderButtons>
-    ),
+    // headerRight: () => (
+    //   <HeaderButtons HeaderButtonComponent={HeaderButton}>
+    //     <Item title="Fav" iconName="rocket" onPress={() => {}} />
+    //   </HeaderButtons>
+    // ),
   };
 };
 
@@ -279,6 +325,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
+  },
+  slideIcon: {
+    top: 15,
   },
 });
 
