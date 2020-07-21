@@ -19,7 +19,7 @@ import {ListItem} from 'react-native-elements';
 
 const user = auth().currentUser;
 
-function RemainderScreen(props) {
+function RecipeScreen(props) {
   const [loading, setLoading] = useState(true);
   const [remainders, setRemainders] = useState([]);
 
@@ -60,14 +60,6 @@ function RemainderScreen(props) {
             },
           });
         }}>
-        {/* <Card style={styles.card}>
-          <View>
-            <Text style={styles.title}>{itemData.item.name}</Text>
-            <View style={styles.dateTimeContainer}>
-              <Text style={styles.footer}>{itemData.item.recipe}</Text>
-            </View>
-          </View>
-        </Card> */}
         <ListItem 
         style={styles.recipeItem}
         key={itemData.item.id}
@@ -109,4 +101,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RemainderScreen;
+export default RecipeScreen;

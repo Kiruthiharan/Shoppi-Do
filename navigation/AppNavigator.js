@@ -10,14 +10,14 @@ import ListDetailScreen from '../screens/ListDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
-import RemainderScreen from '../screens/RemainderScreen';
+import RecipeScreen from '../screens/RecipeScreen';
+import EditRecipeScreen from '../screens/EditRecipeScreen'
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {SafeAreaView} from 'react-native-safe-area-view';
-import NewRemainderScreen from '../screens/NewRemainderScreen';
-import NewRecipe from '../screens/NewRecipe';
-import EditRemainderScreen from '../screens/EditRemainderScreen';
+import NewRecipeScreen from '../screens/NewRecipeScreen';
+
 
 // header styles should change font
 const NavOptions = {
@@ -55,13 +55,16 @@ const ProfileNavigator = createStackNavigator(
 const RemainderNavigator = createStackNavigator(
   {
     Recipes: {
-      screen: RemainderScreen,
+      screen: RecipeScreen,
     },
     NewRecipe: {
-      screen: NewRecipe,
+      screen: NewRecipeScreen,
     },
     RecipeDetail: {
       screen: RecipeDetailScreen,
+    },
+    RecipeEdit: {
+      screen: EditRecipeScreen,
     },
   },
   {

@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Label, DatePicker, Fab, Card} from 'native-base';
-import {TextInput} from 'react-native-paper';
+import {TextInput, FAB} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
@@ -32,6 +32,7 @@ function RecipeDetailScreen(props) {
       const recipe = {
         name: documentSnapshot.data().name,
         recipe: documentSnapshot.data().recipe,
+        owner: documentSnapshot.data().owner,
       };
       setRecipe(recipe);
     });
@@ -77,6 +78,20 @@ function RecipeDetailScreen(props) {
         data={ingredients}
         contentContainerStyle={styles.ingredients}
       />
+      {recipe.owner === user.uid ? (
+        <Fab
+          position="bottomRight"
+          onPress={() => {
+            props.navigation.navigate({
+              routeName: 'RecipeEdit',
+              params: {
+                recipeId: recipeId,
+              },
+            });
+          }}>
+          <Icon name="edit-2" />
+        </Fab>
+      ) : null}
     </View>
   );
 }
@@ -106,8 +121,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom: 5,
     fontSize: 20,
-    fontWeight: 'bold'
-  }
+    fontWeight: 'bold',
+  },
 });
 
 export default RecipeDetailScreen;
