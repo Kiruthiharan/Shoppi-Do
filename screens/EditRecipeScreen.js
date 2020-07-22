@@ -15,8 +15,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
-
-
+import {ScrollView} from 'react-native-gesture-handler';
 
 function EditRecipeScreen(props) {
   const user = auth().currentUser;
@@ -54,6 +53,8 @@ function EditRecipeScreen(props) {
       qty: currentQty,
     });
     setItems(oldItems => [...oldItems, newItem]);
+    setCurrentItem('')
+    setCurrentQty('')
   };
 
   const deleteItem = item => {
@@ -110,11 +111,11 @@ function EditRecipeScreen(props) {
       recipe: recipe,
       owner: user.uid,
     });
-    props.navigation.navigate('Recipes')
+    props.navigation.navigate('Recipes');
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView contentContainerStyle={styles.root}>
       <TextInput
         label="Name"
         mode="outlined"
@@ -146,16 +147,22 @@ function EditRecipeScreen(props) {
           style={styles.qty}
         />
 
-        <TouchableOpacity onPress={addItem} style={{marginHorizontal: 15}}>
+        <TouchableOpacity
+          onPress={addItem}
+          style={{marginHorizontal: 15}}
+          disabled={currentItem.length === 0}>
           <Icon name="plus" size={24} />
         </TouchableOpacity>
       </View>
 
       <FlatList data={items} renderItem={renderRecipeItem} numColumns={1} />
-      <Fab style={{ backgroundColor: Colors.primaryColor }} position="bottomRight" onPress={handleSubmit}>
+      <Fab
+        style={{backgroundColor: Colors.primaryColor}}
+        position="bottomRight"
+        onPress={handleSubmit}>
         <Icon name="check" />
       </Fab>
-    </View>
+    </ScrollView>
   );
 }
 

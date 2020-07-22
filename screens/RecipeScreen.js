@@ -13,11 +13,11 @@ import {Card, Fab} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import LinearGradient from 'react-native-linear-gradient';
-import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
+import {Content, Form, Label, Icon, Input, Spinner} from 'native-base';
 import {ListItem} from 'react-native-elements';
 import Colors from '../constants/Colors';
-
-
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import HeaderButton from '../components/HeaderButton';
 
 function RecipeScreen(props) {
   const user = auth().currentUser;
@@ -81,17 +81,36 @@ function RecipeScreen(props) {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView contentContainerStyle={styles.root}>
       <FlatList data={remainders} renderItem={renderGridItem} numColumns={1} />
       <Fab
-      style={{ backgroundColor: Colors.primaryColor }}
+        style={{backgroundColor: Colors.primaryColor}}
         position="bottomRight"
         onPress={() => props.navigation.navigate('NewRecipe')}>
         <Icon name="add" />
       </Fab>
-    </View>
+    </ScrollView>
   );
 }
+
+RecipeScreen.navigationOptions = navigationData => {
+  return {
+    headerTitle: 'Recipes',
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Fav"
+          iconName="log-out"
+          onPress={() => {
+            auth()
+              .signOut()
+              .then(navigationData.navigation.navigate('Auth'));
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
+};
 
 const styles = StyleSheet.create({
   root: {

@@ -142,7 +142,10 @@ function LoginScreen(props) {
               </View>
               <View>
                 <TouchableOpacity
-                  onPress={() => props.navigation.navigate('Register')}>
+                  onPress={() => props.navigation.navigate('Register')}
+                  disabled={
+                    enteredPassword.length === 0 || enteredEmail.length === 0
+                  }>
                   <Text style={styles.registerContainer}>
                     New here? <Text style={styles.register}> Register</Text>
                   </Text>

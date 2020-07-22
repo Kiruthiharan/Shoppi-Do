@@ -45,6 +45,8 @@ function NewRecipeScreen(props) {
   const handleItemList = item => {
     const newItem = {id: Math.random(), item: currentItem, qty: currentQty};
     setItems(oldItems => [...oldItems, newItem]);
+    setCurrentItem('')
+    setCurrentQty('')
   };
 
   const deleteItem = deleteItem => {
@@ -132,7 +134,8 @@ function NewRecipeScreen(props) {
 
         <TouchableOpacity
           onPress={handleItemList}
-          style={{marginHorizontal: 15}}>
+          style={{marginHorizontal: 15}}
+          disabled={currentItem.length === 0}>
           <Icon name="plus" size={24} />
         </TouchableOpacity>
       </View>

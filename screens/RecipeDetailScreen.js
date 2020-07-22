@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Platform,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {Label, DatePicker, Fab, Card} from 'native-base';
-import {TextInput, FAB} from 'react-native-paper';
+import {TextInput, FAB, Button} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
@@ -16,7 +16,6 @@ import auth from '@react-native-firebase/auth';
 import {FlatList} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
 import Colors from '../constants/Colors';
-
 
 function RecipeDetailScreen(props) {
   const user = auth().currentUser;
@@ -55,6 +54,33 @@ function RecipeDetailScreen(props) {
     };
   }, [recipeId]);
 
+  const addToList = () => {
+    const listDbRef = firestore()
+      .collection('users')
+      .doc(user.uid)
+      .collection('Lists');
+
+    listDbRef
+      .add({
+        name: recipe.name,
+        color: 'blue',
+      })
+      .then(docRef => {
+        console.log(docRef.id);
+        ingredients.forEach(ingredient => {
+          listDbRef
+            .doc(docRef.id)
+            .collection('items')
+            .add({
+              name: ingredient.item,
+              done: false,
+              qty: ingredient.qty,
+            });
+        });
+        props.navigation.navigate('Lists');
+      });
+  };
+
   const renderIngredient = itemData => {
     return (
       <ListItem
@@ -67,7 +93,26 @@ function RecipeDetailScreen(props) {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView contentContainerStyle={styles.root}>
+      <View style={styles.actionsContainer}>
+        <Button icon="plus" onPress={addToList}>
+          Add ing. to list
+        </Button>
+        {recipe.owner === user.uid ? (
+          <Button
+            icon="pencil"
+            onPress={() => {
+              props.navigation.navigate({
+                routeName: 'RecipeEdit',
+                params: {
+                  recipeId: recipeId,
+                },
+              });
+            }}>
+            Edit List
+          </Button>
+        ) : null}
+      </View>
       <Text style={styles.heading}>Instructions</Text>
       <View style={styles.recipeContainer}>
         <Text style={styles.instructions}>{recipe.recipe}</Text>
@@ -79,22 +124,7 @@ function RecipeDetailScreen(props) {
         data={ingredients}
         contentContainerStyle={styles.ingredients}
       />
-      {recipe.owner === user.uid ? (
-        <Fab
-          style={{backgroundColor: Colors.primaryColor}}
-          position="bottomRight"
-          onPress={() => {
-            props.navigation.navigate({
-              routeName: 'RecipeEdit',
-              params: {
-                recipeId: recipeId,
-              },
-            });
-          }}>
-          <Icon name="edit-2" />
-        </Fab>
-      ) : null}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -110,6 +140,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignContent: 'center',
     padding: 15,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   instructions: {
     fontSize: 18,

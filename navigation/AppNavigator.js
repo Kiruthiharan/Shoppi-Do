@@ -14,7 +14,7 @@ import RecipeScreen from '../screens/RecipeScreen';
 import EditRecipeScreen from '../screens/EditRecipeScreen'
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
 import Colors from '../constants/Colors';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Feather';
 import {SafeAreaView} from 'react-native-safe-area-view';
 import NewRecipeScreen from '../screens/NewRecipeScreen';
 
@@ -79,7 +79,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: 'Lists',
         tabBarIcon: tabInfo => {
-          return <Icon name="tasks" size={23} color={tabInfo.tintColor} />;
+          return <Icon name="list" size={23} color={tabInfo.tintColor} />;
         },
         tabBarColor: Colors.headerColor
       },
@@ -89,7 +89,7 @@ const TabNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: 'Recipes',
         tabBarIcon: tabInfo => {
-          return <Icon name="cutlery" size={23} color={tabInfo.tintColor} />;
+          return <Icon name="coffee" size={23} color={tabInfo.tintColor} />;
         },
         tabBarColor: Colors.headerColor
         

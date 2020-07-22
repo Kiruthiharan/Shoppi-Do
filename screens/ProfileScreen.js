@@ -6,16 +6,15 @@ import {
   Text,
   StyleSheet,
   Image,
-  Button,
 } from 'react-native';
-import {TextInput, RadioButton} from 'react-native-paper';
+import {TextInput, RadioButton, Button} from 'react-native-paper';
 import Colors from '../constants/Colors';
 import {DatePicker, Fab} from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-
-
+import {HeaderButtons, Item} from 'react-navigation-header-buttons';
+import HeaderButton from '../components/HeaderButton';
 
 function ProfileScreen(props) {
   const user = auth().currentUser;
@@ -43,12 +42,15 @@ function ProfileScreen(props) {
         setUsername(documentSnapshot.data().username);
         setContact(documentSnapshot.data().contact);
         setDob(documentSnapshot.data().DOB);
+        if (documentSnapshot.data().DOB === undefined) {
+          setDob("Select Date");
+        }
         setGender(documentSnapshot.data().gender);
       } else {
         console.log('No data');
       }
     });
-  }
+  };
 
   const saveToDb = () => {
     dbRef.update({
@@ -61,9 +63,9 @@ function ProfileScreen(props) {
   };
 
   const revertChanges = () => {
-    getFromDb()
+    getFromDb();
     setEditable(!editable);
-  }
+  };
 
   const toggleEdit = () => {
     setEditable(!editable);
@@ -84,13 +86,19 @@ function ProfileScreen(props) {
   const RenderFAB = () => {
     if (!editable) {
       return (
-        <Fab position="topRight" style={{ backgroundColor: Colors.accentColor }} onPress={toggleEdit}>
-          <Icon name="edit-2"/>
+        <Fab
+          position="topRight"
+          style={{backgroundColor: Colors.primaryColor}}
+          onPress={toggleEdit}>
+          <Icon name="edit-2" />
         </Fab>
       );
     } else {
       return (
-        <Fab position="topRight" style={{ backgroundColor: 'red' }} onPress={revertChanges}>
+        <Fab
+          position="topRight"
+          style={{backgroundColor: Colors.warningColor}}
+          onPress={revertChanges}>
           <Icon name="x" />
         </Fab>
       );
@@ -100,12 +108,6 @@ function ProfileScreen(props) {
   return (
     <ScrollView contentContainerStyle={styles.root}>
       <RenderFAB />
-      <View>
-        <Image
-          source={require('../assets/images/profile-default.jpg')}
-          style={styles.image}
-        />
-      </View>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -128,7 +130,7 @@ function ProfileScreen(props) {
         <View style={styles.rowContainer}>
           <Text>Date of Birth </Text>
           <View style={styles.datePicker}>
-            <DatePicker disabled={!editable} onDateChange={handleDate} />
+            <DatePicker style={styles.date} disabled={!editable} onDateChange={handleDate} />
           </View>
         </View>
         <View style={styles.rowContainer}>
@@ -146,12 +148,32 @@ function ProfileScreen(props) {
             </View>
           </RadioButton.Group>
         </View>
-        {editable === true ? <Button title="Update" onPress={saveToDb} /> : null}
-        
+        {editable === true ? (
+          <Button  onPress={saveToDb} mode="contained" >Update</Button>
+        ) : null}
       </View>
     </ScrollView>
   );
 }
+
+ProfileScreen.navigationOptions = navigationData => {
+  return {
+    headerTitle: 'My Profile',
+    headerRight: () => (
+      <HeaderButtons HeaderButtonComponent={HeaderButton}>
+        <Item
+          title="Fav"
+          iconName="log-out"
+          onPress={() => {
+            auth()
+              .signOut()
+              .then(navigationData.navigation.navigate('Auth'));
+          }}
+        />
+      </HeaderButtons>
+    ),
+  };
+};
 
 const styles = StyleSheet.create({
   root: {
@@ -184,8 +206,10 @@ const styles = StyleSheet.create({
   },
   datePicker: {
     borderWidth: 1,
+    borderColor: '#c5c5c5',
     flex: 1,
     marginLeft: 15,
+    backgroundColor: '#f6f6f6'
   },
   genderContainer: {
     flexDirection: 'row',

@@ -5,5 +5,6 @@ export default {
     yellowGradient: ['#FCE38A', '#F38181'],
     blueGradient: ['#17EAD9', '#6078EA'],
     purpleGradient: ['#F02FC2', '#6094EA'],
-    headerColor: "#6078EA"
+    headerColor: "#6078EA",
+    warningColor: '#ea6078'
 };

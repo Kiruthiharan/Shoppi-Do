@@ -31,7 +31,7 @@ function ListDetailScreen(props) {
   const [currentItem, setCurrentItem] = useState({});
 
   let itemInput = null;
-
+  let swiperRef = [];
   const dbRef = firestore()
     .collection('users')
     .doc(user.uid)
@@ -130,6 +130,7 @@ function ListDetailScreen(props) {
     setItem(item.name);
     setQty(item.qty);
     setCurrentItem({id: item.id, done: item.done});
+    swiperRef[item.id].recenter()
     itemInput.focus()
   };
 
@@ -156,7 +157,7 @@ function ListDetailScreen(props) {
       <TouchableHighlight
         style={styles.slideIcon}
         onPress={() => deleteItem(itemData.item.id)}>
-        <MaterialIcons name="delete" size={25} color={'#d11a2a'} />
+        <MaterialIcons name="delete" size={25} color={Colors.warningColor} />
       </TouchableHighlight>,
       <TouchableHighlight
         style={styles.slideIcon}
@@ -165,7 +166,7 @@ function ListDetailScreen(props) {
       </TouchableHighlight>,
     ];
     return (
-      <Swipeable rightButtons={rightButtons}>
+      <Swipeable rightButtons={rightButtons} ref={ref => swiperRef[itemData.item.id] = ref}>
         <View style={styles.todoGrid}>
           <Card>
             <TouchableOpacity
@@ -258,7 +259,7 @@ function ListDetailScreen(props) {
               <Button
                 style={styles.cancelBtn}
                 icon="close-circle"
-                color="red"
+                color={Colors.warningColor}
                 mode="outline"
                 onPress={cancelEdit}
               />

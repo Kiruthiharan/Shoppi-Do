@@ -24,6 +24,8 @@ import List from '../models/list';
 import NewList from '../components/NewList';
 import EditList from '../components/EditList';
 import Colors from '../constants/Colors';
+import {Fab, Icon} from 'native-base';
+import { ActivityIndicator } from 'react-native-paper';
 
 function ListsScreen(props) {
   const [loading, setLoading] = useState(true);
@@ -31,7 +33,7 @@ function ListsScreen(props) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
-  
+  let swiperRef = [];
   const user = auth().currentUser;
   const dbRef = firestore()
     .collection('users')
@@ -99,6 +101,7 @@ function ListsScreen(props) {
 
   const updateItem = item => {
     setCurrentItem(item);
+    swiperRef[item.id].recenter()
     toggleEdit();
   };
 
@@ -107,7 +110,7 @@ function ListsScreen(props) {
       <TouchableHighlight
         style={styles.slideIcon}
         onPress={() => deleteItem(itemData.item.id)}>
-        <MaterialIcons name="delete" size={25} color={'#d11a2a'} />
+        <MaterialIcons name="delete" size={25} color={Colors.warningColor} />
       </TouchableHighlight>,
       <TouchableHighlight
         style={styles.slideIcon}
@@ -127,7 +130,7 @@ function ListsScreen(props) {
     }
 
     return (
-      <Swipeable rightButtons={rightButtons} reCenter>
+      <Swipeable rightButtons={rightButtons} ref = {ref => swiperRef[itemData.item.id] = ref}>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
@@ -176,8 +179,12 @@ function ListsScreen(props) {
         </View>
       )}
 
-      <FAB name="plus" onPress={toggleModal} />
-
+      <Fab
+        style={{backgroundColor: Colors.primaryColor}}
+        position="bottomRight"
+        onPress={toggleModal}>
+        <Icon name="add" />
+      </Fab>
       <Modal
         isVisible={isModalVisible}
         avoidKeyboard={true}
@@ -200,13 +207,15 @@ function ListsScreen(props) {
 ListsScreen.navigationOptions = navigationData => {
   return {
     headerTitle: 'Shopping Lists',
-    headerLeft: () => (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Fav"
-          iconName="navicon"
+          iconName="log-out"
           onPress={() => {
-            navigationData.navigation.toggleDrawer();
+            auth()
+              .signOut()
+              .then(navigationData.navigation.navigate('Auth'));
           }}
         />
       </HeaderButtons>
