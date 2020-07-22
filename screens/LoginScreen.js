@@ -20,26 +20,58 @@ function LoginScreen(props) {
   const [enteredPassword, setEnteredPassword] = useState('');
 
   const [emailValid, setEmailValid] = useState(true);
+  const [passwordValid, setPasswordValid] = useState(true);
+
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const emailHandler = email => {
-    // if (enteredEmail.length === 0){
-    //   setEmailValid(false)
-    // } else {
-    //   setEmailValid(true)
-    // }
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (email.length === 0) {
+      setEmailValid(false);
+      setEmailError('Email cannot be empty');
+    } else if (reg.test(email) === false) {
+      setEmailValid(false);
+      setEmailError('Invalid email address');
+    } else {
+      setEmailValid(true);
+    }
 
     setEnteredEmail(email);
   };
 
   const passwordHandler = password => {
+    if (password.length === 0) {
+      setPasswordValid(false);
+      setPasswordError('Password cannot be empty');
+    } else if (password.length < 4) {
+      setPasswordValid(false);
+      setPasswordError('Password too short');
+    } else {
+      setPasswordValid(true);
+    }
     setEnteredPassword(password);
   };
 
+  const checkValidityEmail = () => {
+    if (enteredEmail.length === 0) {
+      setEmailValid(false);
+      setEmailError('Email cannot be empty');
+    }
+  };
+
+  const checkValidityPassword = () => {
+    if (enteredPassword.length === 0) {
+      setPasswordValid(false);
+      setPasswordError('Password cannot be empty');
+    }
+  };
+
   const loginHandler = () => {
-    if (!emailValid) {
+    if (!emailValid || !passwordValid) {
       return;
     }
-
+    auth().signOut();
     auth()
       .signInWithEmailAndPassword(enteredEmail, enteredPassword)
       .then(() => {
@@ -64,25 +96,26 @@ function LoginScreen(props) {
       style={styles.container}
       keyboardVerticalOffset={-300}>
       <ScrollView contentContainerStyle={styles.scroller}>
-        
-          <View
-            style={styles.header}>
-            <Text style={styles.text_header}>Welcome Back!</Text>
-          </View>
-          
-        
+        <View style={styles.header}>
+          <Text style={styles.text_header}>Welcome Back!</Text>
+        </View>
+
         <View style={styles.footer}>
           <Content>
             <Form>
               <Item floatingLabel>
                 <Label style={styles.label}>Email</Label>
-                <Input onChangeText={emailHandler} value={enteredEmail} />
+                <Input
+                  onChangeText={emailHandler}
+                  value={enteredEmail}
+                  onFocus={checkValidityEmail}
+                />
               </Item>
               <HelperText
                 style={styles.helper}
                 type="error"
                 visible={!emailValid}>
-                Email address is invalid!
+                {emailError}
               </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Password</Label>
@@ -90,14 +123,12 @@ function LoginScreen(props) {
                   onChangeText={passwordHandler}
                   value={enteredPassword}
                   secureTextEntry={true}
+                  onFocus={checkValidityPassword}
                 />
               </Item>
-              <HelperText type="error" visible={true}>
-                Email address is invalid!
+              <HelperText type="error" visible={!passwordValid}>
+                {passwordError}
               </HelperText>
-              <TouchableOpacity>
-                <Text style={styles.forgot}>Forgot password?</Text>
-              </TouchableOpacity>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={loginHandler} activeOpacity={0.3}>
                   <LinearGradient
@@ -166,6 +197,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: 'center',
     flex: 1,
+    marginTop: 25,
   },
   forgot: {
     color: Colors.accentColor,

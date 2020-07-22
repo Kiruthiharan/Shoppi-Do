@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Button,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import LinearGradient from 'react-native-linear-gradient';
@@ -15,22 +16,82 @@ import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
 import firestore from '@react-native-firebase/firestore';
 import {HelperText, TextInput} from 'react-native-paper';
 
-
 function RegisterScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
   const [enteredUserName, setEnteredUserName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [conPasswordError, setConPasswordError] = useState('');
+
+  const [emailValid, setEmailValid] = useState(false);
+  const [usernameValid, setUsernameValid] = useState(false);
+  const [passwordValid, setPasswordValid] = useState(false);
+  const [conPasswordValid, setConPasswordValid] = useState(false);
 
   const emailHandler = email => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (email.length === 0 || enteredEmail.length === 0) {
+      setEmailValid(false);
+      setEmailError('Email cannot be empty');
+    } else if (reg.test(email) === false) {
+      setEmailValid(false);
+      setEmailError('Invalid email address');
+    } else {
+      setEmailValid(true);
+    }
+
     setEnteredEmail(email);
   };
 
   const passwordHandler = password => {
+    if (password.length === 0) {
+      setPasswordValid(false);
+      setPasswordError('Password cannot be empty');
+    } else if (password.length < 4) {
+      setPasswordValid(false);
+      setPasswordError('Password too short');
+    } else {
+      setPasswordValid(true);
+    }
+
+    if (password !== confirmPassword) {
+      setConPasswordValid(false);
+      setConPasswordError('Passwords do not Match');
+    } else {
+      setConPasswordValid(true);
+    }
+    
     setEnteredPassword(password);
   };
 
+  const confirmPasswordHandler = password => {
+    if (password.length === 0) {
+      setConPasswordValid(false);
+      setConPasswordError('Password cannot be empty');
+    } else {
+      setConPasswordValid(true);
+    }
+
+    if (password !== enteredPassword) {
+      setConPasswordValid(false);
+      setConPasswordError('Passwords do not Match');
+    } else {
+      setConPasswordValid(true);
+    }
+    setConfirmPassword(password);
+  };
+
   const usernameHandler = username => {
+    if (username.length === 0) {
+      setUsernameValid(false);
+      setUsernameError('Username cannot be empty');
+    } else {
+      setUsernameValid(true);
+    }
     setEnteredUserName(username);
   };
 
@@ -56,7 +117,7 @@ function RegisterScreen(props) {
           console.log('That email address is invalid!');
         }
 
-        console.error(error);
+        Alert.alert(error.message);
       });
   };
 
@@ -76,32 +137,56 @@ function RegisterScreen(props) {
                 <Label style={styles.label}>Username</Label>
                 <Input onChangeText={usernameHandler} />
               </Item>
-              <HelperText style={styles.helper} type="error" visible={false}>
-                Email address is invalid!
+              <HelperText
+                style={styles.helper}
+                type="error"
+                visible={!usernameValid}>
+                {usernameError}
               </HelperText>
               <Item floatingLabel>
                 <Label style={styles.label}>Email</Label>
                 <Input onChangeText={emailHandler} value={enteredEmail} />
               </Item>
-              <HelperText style={styles.helper} type="error" visible={false}>
-                Email address is invalid!
+              <HelperText
+                style={styles.helper}
+                type="error"
+                visible={!emailValid}>
+                {emailError}
               </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Password</Label>
                 <Input onChangeText={passwordHandler} value={enteredPassword} />
               </Item>
-              <HelperText style={styles.helper} type="error" visible={false}>
-                Email address is invalid!
+              <HelperText
+                style={styles.helper}
+                type="error"
+                visible={!passwordValid}>
+                {passwordError}
               </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Confirm Password</Label>
-                <Input />
+                <Input
+                  onChangeText={confirmPasswordHandler}
+                  value={confirmPassword}
+                />
               </Item>
-              <HelperText style={styles.helper} type="error" visible={false}>
-                Email address is invalid!
+              <HelperText
+                style={styles.helper}
+                type="error"
+                visible={!conPasswordValid}>
+                {conPasswordError}
               </HelperText>
               <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={registerHandler}>
+                <TouchableOpacity
+                  onPress={registerHandler}
+                  disabled={
+                    !(
+                      emailValid &&
+                      passwordValid &&
+                      usernameValid &&
+                      conPasswordValid
+                    )
+                  }>
                   <LinearGradient
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 0}}

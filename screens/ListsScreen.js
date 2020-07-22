@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   FlatList,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -22,7 +23,7 @@ import auth from '@react-native-firebase/auth';
 import List from '../models/list';
 import NewList from '../components/NewList';
 import EditList from '../components/EditList';
-import  Colors  from '../constants/Colors';
+import Colors from '../constants/Colors';
 
 const user = auth().currentUser;
 
@@ -36,6 +37,11 @@ function ListsScreen(props) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+
+  if (user === null) {
+    Alert.alert('An error occured please login again');
+    props.navigation.navigate('Auth');
+  }
 
   async function addList(list, color) {
     dbRef
@@ -109,15 +115,15 @@ function ListsScreen(props) {
         <MaterialIcons name="edit" size={25} color={'black'} />
       </TouchableHighlight>,
     ];
-    let listColor = []
-    if (itemData.item.color === "yellow"){
-      listColor = Colors.yellowGradient
-    } else if (itemData.item.color === "blue"){
-      listColor = Colors.blueGradient
-    } else if (itemData.item.color === "purple"){
-      listColor = Colors.purpleGradient
-    } else if (itemData.item.color === "green"){
-      listColor = Colors.greenGradient
+    let listColor = [];
+    if (itemData.item.color === 'yellow') {
+      listColor = Colors.yellowGradient;
+    } else if (itemData.item.color === 'blue') {
+      listColor = Colors.blueGradient;
+    } else if (itemData.item.color === 'purple') {
+      listColor = Colors.purpleGradient;
+    } else if (itemData.item.color === 'green') {
+      listColor = Colors.greenGradient;
     }
 
     return (
@@ -161,7 +167,15 @@ function ListsScreen(props) {
       behavior="padding"
       style={styles.root}
       keyboardVerticalOffset={-300}>
-      <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />
+
+      {lists.length !== 0 ? (
+        <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />
+      ) : (
+        <View style={styles.empty}>
+          <Text style={styles.emptyTitle}>You have no lists</Text>
+        </View>
+      )}
+
       <FAB name="plus" onPress={toggleModal} />
 
       <Modal
@@ -203,6 +217,14 @@ ListsScreen.navigationOptions = navigationData => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  empty: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1
+  },
+  emptyTitle: {
+    fontSize: 24
   },
   gridItem: {
     flex: 1,

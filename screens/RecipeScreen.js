@@ -83,7 +83,7 @@ function RecipeScreen(props) {
     <View style={styles.root}>
       <FlatList data={remainders} renderItem={renderGridItem} numColumns={1} />
       <Fab
-      style={{ backgroundColor: Colors.accentColor }}
+      style={{ backgroundColor: Colors.primaryColor }}
         position="bottomRight"
         onPress={() => props.navigation.navigate('NewRecipe')}>
         <Icon name="add" />

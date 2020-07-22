@@ -15,7 +15,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {FlatList} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
-
+import Colors from '../constants/Colors';
 const user = auth().currentUser;
 
 function RecipeDetailScreen(props) {
@@ -68,9 +68,9 @@ function RecipeDetailScreen(props) {
   return (
     <View style={styles.root}>
       <Text style={styles.heading}>Instructions</Text>
-      <Card style={styles.recipeContainer}>
-        <Text>{recipe.recipe}</Text>
-      </Card>
+      <View style={styles.recipeContainer}>
+        <Text style={styles.instructions}>{recipe.recipe}</Text>
+      </View>
 
       <Text style={styles.heading}>Ingredients</Text>
       <FlatList
@@ -80,6 +80,7 @@ function RecipeDetailScreen(props) {
       />
       {recipe.owner === user.uid ? (
         <Fab
+          style={{backgroundColor: Colors.primaryColor}}
           position="bottomRight"
           onPress={() => {
             props.navigation.navigate({
@@ -109,11 +110,15 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     padding: 15,
   },
+  instructions: {
+    fontSize: 18,
+  },
   ingredients: {
     flexGrow: 1,
     maxHeight: '50%',
   },
   recipeContainer: {
+    backgroundColor: 'white',
     marginBottom: 15,
     padding: 10,
   },

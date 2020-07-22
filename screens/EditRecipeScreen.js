@@ -14,6 +14,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import Colors from '../constants/Colors';
 
 const user = auth().currentUser;
 
@@ -150,7 +151,7 @@ function EditRecipeScreen(props) {
       </View>
 
       <FlatList data={items} renderItem={renderRecipeItem} numColumns={1} />
-      <Fab position="bottomRight" onPress={handleSubmit}>
+      <Fab style={{ backgroundColor: Colors.primaryColor }} position="bottomRight" onPress={handleSubmit}>
         <Icon name="check" />
       </Fab>
     </View>
