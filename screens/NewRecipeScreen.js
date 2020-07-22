@@ -13,8 +13,9 @@ import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {FlatList} from 'react-native-gesture-handler';
+import Colors from '../constants/Colors';
 
-const user = auth().currentUser;
+
 
 function NewRecipeScreen(props) {
   const [name, setName] = useState('');
@@ -22,7 +23,7 @@ function NewRecipeScreen(props) {
   const [currentItem, setCurrentItem] = useState('');
   const [currentQty, setCurrentQty] = useState('');
   const [items, setItems] = useState([]);
-
+  const user = auth().currentUser;
   const dbRef = firestore().collection('recipes');
 
   const handleName = name => {
@@ -58,17 +59,20 @@ function NewRecipeScreen(props) {
       .add({
         name: name,
         recipe: recipe,
-        owner: user.uid
+        owner: user.uid,
       })
       .then(docRef => {
         console.log(docRef.id);
         items.forEach(item => {
-          dbRef.doc(docRef.id).collection("ingredients").add({
-            item: item.item,
-            qty: item.qty
-          })
-        })
-        
+          dbRef
+            .doc(docRef.id)
+            .collection('ingredients')
+            .add({
+              item: item.item,
+              qty: item.qty,
+            });
+        });
+        props.navigation.navigate('Recipes')
       })
       .catch(error => {
         console.error(error);
@@ -133,7 +137,11 @@ function NewRecipeScreen(props) {
         </TouchableOpacity>
       </View>
       <FlatList data={items} renderItem={renderRecipeItem} numColumns={1} />
-      <Fab position="bottomRight" onPress={handleSubmit}>
+      <Fab
+        style={{backgroundColor: Colors.primaryColor}}
+        position="bottomRight"
+        onPress={handleSubmit}
+        disabled={name.length === 0 || recipe.length === 0 || items.length === 0}>
         <Icon name="check" />
       </Fab>
     </View>
@@ -172,8 +180,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   recipeInput: {
-    maxHeight: '50%'
-  }
+    maxHeight: '50%',
+  },
 });
 
 export default NewRecipeScreen;

@@ -16,9 +16,10 @@ import auth from '@react-native-firebase/auth';
 import {FlatList} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
 import Colors from '../constants/Colors';
-const user = auth().currentUser;
+
 
 function RecipeDetailScreen(props) {
+  const user = auth().currentUser;
   const recipeId = props.navigation.getParam('recipeId');
   const [recipe, setRecipe] = useState({});
   const [ingredients, setIngredients] = useState([]);

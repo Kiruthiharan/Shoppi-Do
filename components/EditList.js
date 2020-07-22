@@ -3,13 +3,11 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import {Input} from 'native-base';
-import {RadioButton} from 'react-native-paper';
+import {RadioButton, Button} from 'react-native-paper';
 
 const EditList = props => {
   const [enteredList, setEnteredList] = useState(props.item.title);
@@ -70,7 +68,13 @@ const EditList = props => {
             uncheckedColor="#9f50e3"
           />
         </View>
-        <Button onPress={handleSubmit} title="Edit" />
+        <Button
+          icon="check"
+          mode="contained"
+          onPress={handleSubmit}
+          disabled={enteredList.length === 0}>
+          Edit
+        </Button>
       </View>
     </View>
   );

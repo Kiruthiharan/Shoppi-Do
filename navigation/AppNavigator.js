@@ -106,7 +106,6 @@ const TabNavigator = createMaterialBottomTabNavigator(
     },
   },
   {
-    
     activeTintColor: Colors.headerColor,
     shifting: true,
   },

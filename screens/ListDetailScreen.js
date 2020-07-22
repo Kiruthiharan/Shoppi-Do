@@ -6,10 +6,9 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
-  Button,
   TouchableHighlight,
 } from 'react-native';
-import {TextInput} from 'react-native-paper';
+import {TextInput, Button} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {Card} from 'native-base';
@@ -18,20 +17,20 @@ import Swipeable from 'react-native-swipeable-row';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../constants/Colors';
 
-const user = auth().currentUser;
+
 
 function ListDetailScreen(props) {
   const listId = props.navigation.getParam('listId');
-
-  const [, setListItems] = useState([]);
+  const user = auth().currentUser;
   const [loading, setLoading] = useState(true);
   const [item, setItem] = useState('');
   const [qty, setQty] = useState('');
-  const [, setList] = useState('');
   const [doneList, setDoneList] = useState([]);
   const [pendingList, setPendingList] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState({});
+
+  let itemInput = null;
 
   const dbRef = firestore()
     .collection('users')
@@ -68,7 +67,6 @@ function ListDetailScreen(props) {
         items.push(item);
       });
 
-      setListItems(items);
       setDoneList(doneItems);
       setPendingList(pendingItems);
 
@@ -132,6 +130,7 @@ function ListDetailScreen(props) {
     setItem(item.name);
     setQty(item.qty);
     setCurrentItem({id: item.id, done: item.done});
+    itemInput.focus()
   };
 
   const cancelEdit = () => {
@@ -139,7 +138,7 @@ function ListDetailScreen(props) {
     setQty('');
     setCurrentItem({});
     setEditMode(false);
-  }
+  };
 
   const toggleDone = (id, status) => {
     console.log(id, status);
@@ -168,27 +167,30 @@ function ListDetailScreen(props) {
     return (
       <Swipeable rightButtons={rightButtons}>
         <View style={styles.todoGrid}>
-        <Card >
-          <TouchableOpacity
-            style={styles.item}
-            activeOpacity={0.7}
-            onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
-            <CheckBox
-              value={itemData.item.done}
-              onChange={() => toggleDone(itemData.item.id, itemData.item.done)}
-            />
-            <View style={styles.itemQty}>
-              <Text style={itemData.item.done ? styles.doneItem : styles.title}>
-                {itemData.item.name}
-              </Text>
-              <Text style={itemData.item.done ? styles.doneItem : styles.title}>
-                {itemData.item.qty}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </Card>
+          <Card>
+            <TouchableOpacity
+              style={styles.item}
+              activeOpacity={0.7}
+              onPress={() => toggleDone(itemData.item.id, itemData.item.done)}>
+              <CheckBox
+                value={itemData.item.done}
+                onChange={() =>
+                  toggleDone(itemData.item.id, itemData.item.done)
+                }
+              />
+              <View style={styles.itemQty}>
+                <Text
+                  style={itemData.item.done ? styles.doneItem : styles.title}>
+                  {itemData.item.name}
+                </Text>
+                <Text
+                  style={itemData.item.done ? styles.doneItem : styles.title}>
+                  {itemData.item.qty}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </Card>
         </View>
-        
       </Swipeable>
     );
   };
@@ -196,20 +198,26 @@ function ListDetailScreen(props) {
   return (
     <ScrollView contentContainerStyle={styles.root}>
       <View style={styles.lists}>
-        <View>
-          <Text style={styles.heading}>Pending Items</Text>
-          <FlatList
-            data={pendingList}
-            renderItem={renderItem}
-            numColumns={1}
-            contentContainerStyle={styles.list}
-          />
-          {pendingList.length === 0 ? (
-            <Text style={styles.info}> *No pending items</Text>
-          ) : null}
-        </View>
+        {pendingList.length === 0 && doneList.length === 0 ? (
+          <View style={styles.empty}>
+            <Text style={styles.emptyTitle}>You have no Items</Text>
+            <Text style={styles.emptyTitle}>Add an item to get Started</Text>
+          </View>
+        ) : null}
 
-        {doneList.length === 0 ? null : (
+        {pendingList.length !== 0 ? (
+          <View>
+            <Text style={styles.heading}>Pending Items</Text>
+            <FlatList
+              data={pendingList}
+              renderItem={renderItem}
+              numColumns={1}
+              contentContainerStyle={styles.list}
+            />
+          </View>
+        ) : null}
+
+        {doneList.length !== 0 ? (
           <View>
             <Text style={styles.heading}>Done Items</Text>
             <FlatList
@@ -219,7 +227,7 @@ function ListDetailScreen(props) {
               contentContainerStyle={styles.list}
             />
           </View>
-        )}
+        ) : null}
       </View>
 
       <View style={styles.inputContainer}>
@@ -229,6 +237,7 @@ function ListDetailScreen(props) {
           onChangeText={handleItem}
           mode="outlined"
           label="Item"
+          ref= {ref => itemInput = ref}
         />
         <TextInput
           style={styles.inputQty}
@@ -239,12 +248,28 @@ function ListDetailScreen(props) {
         />
         <View style={styles.addBtn}>
           {editMode ? (
-            <View>
-              <Button title="Edit" onPress={editItem} />
-              <Button title="Cancel" onPress={cancelEdit} />
+            <View style={styles.editContainer}>
+              <Button
+                mode="contained"
+                onPress={editItem}
+                disabled={item.length === 0}>
+                Edit
+              </Button>
+              <Button
+                style={styles.cancelBtn}
+                icon="close-circle"
+                color="red"
+                mode="outline"
+                onPress={cancelEdit}
+              />
             </View>
           ) : (
-            <Button title="Add" onPress={addItem} />
+            <Button
+              mode="contained"
+              onPress={addItem}
+              disabled={item.length === 0}>
+              Add
+            </Button>
           )}
         </View>
       </View>
@@ -270,6 +295,20 @@ const styles = StyleSheet.create({
   root: {
     flexGrow: 1,
   },
+  empty: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  editContainer: {
+    flexDirection: 'row',
+  },
+  emptyTitle: {
+    fontSize: 24,
+  },
+  cancelBtn: {
+    marginLeft: 2,
+  },
   info: {
     alignSelf: 'center',
   },
@@ -286,13 +325,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 5,
     alignItems: 'center',
-    
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    
   },
   input: {
     flex: 2,
@@ -308,11 +345,11 @@ const styles = StyleSheet.create({
     height: 45,
   },
   todoGrid: {
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
   addBtn: {
+    flexDirection: 'row',
     marginHorizontal: 5,
-    height: 45,
   },
   doneItem: {
     textDecorationLine: 'line-through',

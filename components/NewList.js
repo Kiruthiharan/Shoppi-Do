@@ -3,13 +3,11 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import {Input} from 'native-base';
-import {RadioButton} from 'react-native-paper';
+import {RadioButton, Button} from 'react-native-paper';
 
 const NewList = props => {
   const [enteredList, setEnteredList] = useState('');
@@ -70,7 +68,13 @@ const NewList = props => {
             uncheckedColor="#9f50e3"
           />
         </View>
-        <Button onPress={handleSubmit} title="Add" />
+        <Button
+          icon="check"
+          mode="contained"
+          onPress={handleSubmit}
+          disabled={enteredList.length === 0}>
+          Add
+        </Button>
       </View>
     </View>
   );
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
   colorInput: {
     flexDirection: 'row',
     marginVertical: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
 });
 

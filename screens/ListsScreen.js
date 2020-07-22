@@ -25,18 +25,34 @@ import NewList from '../components/NewList';
 import EditList from '../components/EditList';
 import Colors from '../constants/Colors';
 
-const user = auth().currentUser;
-
 function ListsScreen(props) {
-  const dbRef = firestore()
-    .collection('users')
-    .doc(user.uid)
-    .collection('Lists');
   const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+  
+  const user = auth().currentUser;
+  const dbRef = firestore()
+    .collection('users')
+    .doc(user.uid)
+    .collection('Lists');
+
+  useEffect(() => {
+    return dbRef.onSnapshot(querySnapshot => {
+      const list = [];
+      querySnapshot.forEach(doc => {
+        const single = new List(doc.id, doc.data().name, doc.data().color);
+        list.push(single);
+      });
+
+      setLists(list);
+
+      if (loading) {
+        setLoading(false);
+      }
+    });
+  }, []);
 
   if (user === null) {
     Alert.alert('An error occured please login again');
@@ -69,22 +85,6 @@ function ListsScreen(props) {
     setEnteredList('');
     toggleEdit();
   }
-
-  useEffect(() => {
-    return dbRef.onSnapshot(querySnapshot => {
-      const list = [];
-      querySnapshot.forEach(doc => {
-        const single = new List(doc.id, doc.data().name, doc.data().color);
-        list.push(single);
-      });
-
-      setLists(list);
-
-      if (loading) {
-        setLoading(false);
-      }
-    });
-  }, []);
 
   if (loading) {
     return <Text>loading....</Text>;
@@ -167,12 +167,12 @@ function ListsScreen(props) {
       behavior="padding"
       style={styles.root}
       keyboardVerticalOffset={-300}>
-
       {lists.length !== 0 ? (
         <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />
       ) : (
         <View style={styles.empty}>
           <Text style={styles.emptyTitle}>You have no lists</Text>
+          <Text style={styles.emptyTitle}>Click on + to get Started</Text>
         </View>
       )}
 
@@ -221,10 +221,10 @@ const styles = StyleSheet.create({
   empty: {
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1
+    flex: 1,
   },
   emptyTitle: {
-    fontSize: 24
+    fontSize: 24,
   },
   gridItem: {
     flex: 1,

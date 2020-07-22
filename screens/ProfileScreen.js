@@ -15,9 +15,10 @@ import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
-const user = auth().currentUser;
+
 
 function ProfileScreen(props) {
+  const user = auth().currentUser;
   const [editable, setEditable] = useState(false);
   const [username, setUsername] = useState('');
   const [contact, setContact] = useState('');

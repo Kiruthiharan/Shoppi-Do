@@ -16,9 +16,10 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
 
-const user = auth().currentUser;
+
 
 function EditRecipeScreen(props) {
+  const user = auth().currentUser;
   const recipeId = props.navigation.getParam('recipeId');
   const [name, setName] = useState('');
   const [recipe, setRecipe] = useState('');

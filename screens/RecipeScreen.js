@@ -17,9 +17,10 @@ import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
 import {ListItem} from 'react-native-elements';
 import Colors from '../constants/Colors';
 
-const user = auth().currentUser;
+
 
 function RecipeScreen(props) {
+  const user = auth().currentUser;
   const [loading, setLoading] = useState(true);
   const [remainders, setRemainders] = useState([]);
 
