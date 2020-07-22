@@ -15,6 +15,7 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function ProfileScreen(props) {
   const user = auth().currentUser;
@@ -23,6 +24,7 @@ function ProfileScreen(props) {
   const [contact, setContact] = useState('');
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const dbRef = firestore()
     .collection('users')
@@ -36,20 +38,24 @@ function ProfileScreen(props) {
   }, []);
 
   const getFromDb = () => {
-    dbRef.get().then(documentSnapshot => {
-      if (documentSnapshot.exists) {
-        console.log('List data: ', documentSnapshot.data());
-        setUsername(documentSnapshot.data().username);
-        setContact(documentSnapshot.data().contact);
-        setDob(documentSnapshot.data().DOB);
-        if (documentSnapshot.data().DOB === undefined) {
-          setDob("Select Date");
+    dbRef
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          console.log('List data: ', documentSnapshot.data());
+          setUsername(documentSnapshot.data().username);
+          setContact(documentSnapshot.data().contact);
+          setDob(documentSnapshot.data().DOB);
+          if (documentSnapshot.data().DOB === undefined) {
+            setDob('Select Date');
+          }
+          setGender(documentSnapshot.data().gender);
+        } else {
+          console.log('No data');
         }
-        setGender(documentSnapshot.data().gender);
-      } else {
-        console.log('No data');
-      }
-    });
+      })
+      .then(() => setLoading(false))
+      .catch(() => setLoading(false));
   };
 
   const saveToDb = () => {
@@ -106,9 +112,11 @@ function ProfileScreen(props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.root}>
+    <ScrollView
+      contentContainerStyle={styles.root}
+      keyboardShouldPersistTaps="always">
       <RenderFAB />
-
+      <Spinner visible={loading} textContent={'Loading...'} />
       <View style={styles.inputContainer}>
         <TextInput
           mode="outlined"
@@ -130,7 +138,11 @@ function ProfileScreen(props) {
         <View style={styles.rowContainer}>
           <Text>Date of Birth </Text>
           <View style={styles.datePicker}>
-            <DatePicker style={styles.date} disabled={!editable} onDateChange={handleDate} />
+            <DatePicker
+              style={styles.date}
+              disabled={!editable}
+              onDateChange={handleDate}
+            />
           </View>
         </View>
         <View style={styles.rowContainer}>
@@ -149,7 +161,9 @@ function ProfileScreen(props) {
           </RadioButton.Group>
         </View>
         {editable === true ? (
-          <Button  onPress={saveToDb} mode="contained" >Update</Button>
+          <Button onPress={saveToDb} mode="contained">
+            Update
+          </Button>
         ) : null}
       </View>
     </ScrollView>
@@ -209,7 +223,7 @@ const styles = StyleSheet.create({
     borderColor: '#c5c5c5',
     flex: 1,
     marginLeft: 15,
-    backgroundColor: '#f6f6f6'
+    backgroundColor: '#f6f6f6',
   },
   genderContainer: {
     flexDirection: 'row',

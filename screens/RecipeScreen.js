@@ -13,17 +13,17 @@ import {Card, Fab} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import LinearGradient from 'react-native-linear-gradient';
-import {Content, Form, Label, Icon, Input, Spinner} from 'native-base';
+import {Content, Form, Label, Icon, Input} from 'native-base';
 import {ListItem} from 'react-native-elements';
 import Colors from '../constants/Colors';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function RecipeScreen(props) {
   const user = auth().currentUser;
   const [loading, setLoading] = useState(true);
   const [remainders, setRemainders] = useState([]);
-
   const dbRef = firestore().collection('recipes');
 
   useEffect(() => {
@@ -82,6 +82,7 @@ function RecipeScreen(props) {
 
   return (
     <ScrollView contentContainerStyle={styles.root}>
+      <Spinner visible={loading} textContent={'Loading...'} />
       <FlatList data={remainders} renderItem={renderGridItem} numColumns={1} />
       <Fab
         style={{backgroundColor: Colors.primaryColor}}

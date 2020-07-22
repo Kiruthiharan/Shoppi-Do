@@ -25,7 +25,8 @@ import NewList from '../components/NewList';
 import EditList from '../components/EditList';
 import Colors from '../constants/Colors';
 import {Fab, Icon} from 'native-base';
-import { ActivityIndicator } from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function ListsScreen(props) {
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,7 @@ function ListsScreen(props) {
   const [currentItem, setCurrentItem] = useState(null);
   let swiperRef = [];
   const user = auth().currentUser;
+
   const dbRef = firestore()
     .collection('users')
     .doc(user.uid)
@@ -55,11 +57,6 @@ function ListsScreen(props) {
       }
     });
   }, []);
-
-  if (user === null) {
-    Alert.alert('An error occured please login again');
-    props.navigation.navigate('Auth');
-  }
 
   async function addList(list, color) {
     dbRef
@@ -89,7 +86,7 @@ function ListsScreen(props) {
   }
 
   if (loading) {
-    return <Text>loading....</Text>;
+    return <Spinner visible={loading} textContent={'Loading...'} />
   }
 
   const deleteItem = id => {
@@ -101,7 +98,7 @@ function ListsScreen(props) {
 
   const updateItem = item => {
     setCurrentItem(item);
-    swiperRef[item.id].recenter()
+    swiperRef[item.id].recenter();
     toggleEdit();
   };
 
@@ -130,7 +127,9 @@ function ListsScreen(props) {
     }
 
     return (
-      <Swipeable rightButtons={rightButtons} ref = {ref => swiperRef[itemData.item.id] = ref}>
+      <Swipeable
+        rightButtons={rightButtons}
+        ref={ref => (swiperRef[itemData.item.id] = ref)}>
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => {
@@ -170,6 +169,7 @@ function ListsScreen(props) {
       behavior="padding"
       style={styles.root}
       keyboardVerticalOffset={-300}>
+      
       {lists.length !== 0 ? (
         <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />
       ) : (

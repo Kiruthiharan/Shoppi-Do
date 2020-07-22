@@ -16,13 +16,14 @@ import auth from '@react-native-firebase/auth';
 import {FlatList} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
 import Colors from '../constants/Colors';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function RecipeDetailScreen(props) {
   const user = auth().currentUser;
   const recipeId = props.navigation.getParam('recipeId');
   const [recipe, setRecipe] = useState({});
   const [ingredients, setIngredients] = useState([]);
-
+  const [loading, setLoading] = useState(true)
   const dbRef = firestore()
     .collection('recipes')
     .doc(recipeId);
@@ -35,7 +36,7 @@ function RecipeDetailScreen(props) {
         owner: documentSnapshot.data().owner,
       };
       setRecipe(recipe);
-    });
+    }).then(() => setLoading(false))
 
     dbRef.collection('ingredients').onSnapshot(querySnapshot => {
       const ingredients = [];
@@ -47,7 +48,7 @@ function RecipeDetailScreen(props) {
         });
       });
       setIngredients(ingredients);
-    });
+    })
 
     return () => {
       console.log('list');
@@ -63,7 +64,7 @@ function RecipeDetailScreen(props) {
     listDbRef
       .add({
         name: recipe.name,
-        color: 'blue',
+        color: 'purple',
       })
       .then(docRef => {
         console.log(docRef.id);
@@ -93,7 +94,22 @@ function RecipeDetailScreen(props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.root}>
+    <ScrollView
+      contentContainerStyle={styles.root}
+      keyboardShouldPersistTaps="always">
+      <Spinner visible={loading} textContent={'Loading...'} />
+      <Text style={styles.heading}>Instructions</Text>
+      
+      <View style={styles.recipeContainer}>
+        <Text style={styles.instructions}>{recipe.recipe}</Text>
+      </View>
+
+      <Text style={styles.heading}>Ingredients</Text>
+      <FlatList
+        renderItem={renderIngredient}
+        data={ingredients}
+        contentContainerStyle={styles.ingredients}
+      />
       <View style={styles.actionsContainer}>
         <Button icon="plus" onPress={addToList}>
           Add ing. to list
@@ -113,17 +129,6 @@ function RecipeDetailScreen(props) {
           </Button>
         ) : null}
       </View>
-      <Text style={styles.heading}>Instructions</Text>
-      <View style={styles.recipeContainer}>
-        <Text style={styles.instructions}>{recipe.recipe}</Text>
-      </View>
-
-      <Text style={styles.heading}>Ingredients</Text>
-      <FlatList
-        renderItem={renderIngredient}
-        data={ingredients}
-        contentContainerStyle={styles.ingredients}
-      />
     </ScrollView>
   );
 }
@@ -161,7 +166,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingBottom: 5,
     fontSize: 20,
-    fontWeight: 'bold',
   },
 });
 

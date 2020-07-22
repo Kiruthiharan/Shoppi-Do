@@ -7,6 +7,7 @@ import {
   Platform,
   TouchableOpacity,
   FlatList,
+  ScrollView
 } from 'react-native';
 import {Label, DatePicker, Fab, Card} from 'native-base';
 import {TextInput} from 'react-native-paper';
@@ -15,7 +16,8 @@ import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
-import {ScrollView} from 'react-native-gesture-handler';
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 function EditRecipeScreen(props) {
   const user = auth().currentUser;
@@ -25,7 +27,7 @@ function EditRecipeScreen(props) {
   const [currentItem, setCurrentItem] = useState('');
   const [currentQty, setCurrentQty] = useState('');
   const [items, setItems] = useState([]);
-
+  const [loading, setLoading] = useState(true)
   const dbRef = firestore()
     .collection('recipes')
     .doc(recipeId);
@@ -69,7 +71,7 @@ function EditRecipeScreen(props) {
       console.log(documentSnapshot);
       setName(documentSnapshot.data().name);
       setRecipe(documentSnapshot.data().recipe);
-    });
+    }).then(() => setLoading(false)).catch(() => setLoading(false))
 
     dbRef.collection('ingredients').onSnapshot(querySnapshot => {
       const ingredients = [];
@@ -116,6 +118,7 @@ function EditRecipeScreen(props) {
 
   return (
     <ScrollView contentContainerStyle={styles.root}>
+      <Spinner visible={loading} textContent={'Loading...'} />
       <TextInput
         label="Name"
         mode="outlined"

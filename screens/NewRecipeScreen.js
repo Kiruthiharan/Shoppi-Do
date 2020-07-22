@@ -6,6 +6,7 @@ import {
   Button,
   Platform,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {Label, DatePicker, Fab, Card} from 'native-base';
 import {TextInput} from 'react-native-paper';
@@ -14,8 +15,6 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {FlatList} from 'react-native-gesture-handler';
 import Colors from '../constants/Colors';
-
-
 
 function NewRecipeScreen(props) {
   const [name, setName] = useState('');
@@ -45,8 +44,8 @@ function NewRecipeScreen(props) {
   const handleItemList = item => {
     const newItem = {id: Math.random(), item: currentItem, qty: currentQty};
     setItems(oldItems => [...oldItems, newItem]);
-    setCurrentItem('')
-    setCurrentQty('')
+    setCurrentItem('');
+    setCurrentQty('');
   };
 
   const deleteItem = deleteItem => {
@@ -74,7 +73,7 @@ function NewRecipeScreen(props) {
               qty: item.qty,
             });
         });
-        props.navigation.navigate('Recipes')
+        props.navigation.navigate('Recipes');
       })
       .catch(error => {
         console.error(error);
@@ -101,7 +100,7 @@ function NewRecipeScreen(props) {
   };
 
   return (
-    <View style={styles.root}>
+    <ScrollView contentContainerStyle={styles.root} keyboardShouldPersistTaps="always">
       <TextInput
         label="Name"
         mode="outlined"
@@ -144,10 +143,12 @@ function NewRecipeScreen(props) {
         style={{backgroundColor: Colors.primaryColor}}
         position="bottomRight"
         onPress={handleSubmit}
-        disabled={name.length === 0 || recipe.length === 0 || items.length === 0}>
+        disabled={
+          name.length === 0 || recipe.length === 0 || items.length === 0
+        }>
         <Icon name="check" />
       </Fab>
-    </View>
+    </ScrollView>
   );
 }
 

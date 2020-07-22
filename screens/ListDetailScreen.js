@@ -16,8 +16,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import Swipeable from 'react-native-swipeable-row';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../constants/Colors';
-
-
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function ListDetailScreen(props) {
   const listId = props.navigation.getParam('listId');
@@ -130,8 +129,8 @@ function ListDetailScreen(props) {
     setItem(item.name);
     setQty(item.qty);
     setCurrentItem({id: item.id, done: item.done});
-    swiperRef[item.id].recenter()
-    itemInput.focus()
+    swiperRef[item.id].recenter();
+    itemInput.focus();
   };
 
   const cancelEdit = () => {
@@ -166,7 +165,9 @@ function ListDetailScreen(props) {
       </TouchableHighlight>,
     ];
     return (
-      <Swipeable rightButtons={rightButtons} ref={ref => swiperRef[itemData.item.id] = ref}>
+      <Swipeable
+        rightButtons={rightButtons}
+        ref={ref => (swiperRef[itemData.item.id] = ref)}>
         <View style={styles.todoGrid}>
           <Card>
             <TouchableOpacity
@@ -197,7 +198,10 @@ function ListDetailScreen(props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.root}>
+    <ScrollView
+      contentContainerStyle={styles.root}
+      keyboardShouldPersistTaps="always">
+       <Spinner visible={loading} textContent={'Loading...'} />
       <View style={styles.lists}>
         {pendingList.length === 0 && doneList.length === 0 ? (
           <View style={styles.empty}>
@@ -238,7 +242,7 @@ function ListDetailScreen(props) {
           onChangeText={handleItem}
           mode="outlined"
           label="Item"
-          ref= {ref => itemInput = ref}
+          ref={ref => (itemInput = ref)}
         />
         <TextInput
           style={styles.inputQty}

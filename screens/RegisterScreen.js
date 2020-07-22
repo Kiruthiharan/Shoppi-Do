@@ -12,9 +12,10 @@ import {
 import auth from '@react-native-firebase/auth';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../constants/Colors';
-import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
+import {Content, Form, Item, Label, Icon, Input} from 'native-base';
 import firestore from '@react-native-firebase/firestore';
 import {HelperText, TextInput} from 'react-native-paper';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function RegisterScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -31,6 +32,8 @@ function RegisterScreen(props) {
   const [usernameValid, setUsernameValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
   const [conPasswordValid, setConPasswordValid] = useState(false);
+
+  const [loading, setLoading] = useState(false)
 
   const emailHandler = email => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -64,7 +67,7 @@ function RegisterScreen(props) {
     } else {
       setConPasswordValid(true);
     }
-    
+
     setEnteredPassword(password);
   };
 
@@ -96,10 +99,12 @@ function RegisterScreen(props) {
   };
 
   const registerHandler = () => {
+    setLoading(true)
     auth().signOut();
     auth()
       .createUserWithEmailAndPassword(enteredEmail, enteredPassword)
       .then(() => {
+        setLoading(false)
         console.log('User account created & signed in!');
         const user = auth().currentUser;
         const dbRef = firestore()
@@ -109,6 +114,7 @@ function RegisterScreen(props) {
         props.navigation.navigate('Login');
       })
       .catch(error => {
+        setLoading(false)
         if (error.code === 'auth/email-already-in-use') {
           console.log('That email address is already in use!');
         }
@@ -126,7 +132,10 @@ function RegisterScreen(props) {
       behavior="padding"
       style={styles.container}
       keyboardVerticalOffset={-300}>
-      <ScrollView contentContainerStyle={styles.scroller}>
+      <ScrollView
+        contentContainerStyle={styles.scroller}
+        keyboardShouldPersistTaps="always">
+        <Spinner visible={loading} textContent={'Loading...'} />
         <View style={styles.header}>
           <Text style={styles.text_header}>Get on Board!</Text>
         </View>
@@ -205,7 +214,7 @@ function RegisterScreen(props) {
                 </TouchableOpacity>
               </View>
             </Form>
-            {/* <Spinner color='red' style={styles.loading}/> */}
+            
           </Content>
         </View>
       </ScrollView>

@@ -12,8 +12,9 @@ import {Card} from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
-import {Content, Form, Item, Label, Icon, Input, Spinner} from 'native-base';
+import {Content, Form, Item, Label, Icon, Input} from 'native-base';
 import {HelperText} from 'react-native-paper';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 function LoginScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
@@ -24,6 +25,8 @@ function LoginScreen(props) {
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+
+  const [loading, setLoading] = useState(false)
 
   const emailHandler = email => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -71,10 +74,12 @@ function LoginScreen(props) {
     if (!emailValid || !passwordValid) {
       return;
     }
+    setLoading(true)
     auth().signOut();
     auth()
       .signInWithEmailAndPassword(enteredEmail, enteredPassword)
       .then(() => {
+        setLoading(false)
         props.navigation.navigate('Home');
       })
       .catch(error => {
@@ -85,8 +90,10 @@ function LoginScreen(props) {
         if (error.code === 'auth/invalid-email') {
           // console.log('That email address is invalid!');
         }
+        setLoading(false)
         Alert.alert(error.message);
         console.log(error.message.body);
+
       });
   };
 
@@ -95,7 +102,10 @@ function LoginScreen(props) {
       behavior="padding"
       style={styles.container}
       keyboardVerticalOffset={-300}>
-      <ScrollView contentContainerStyle={styles.scroller}>
+      <ScrollView
+        contentContainerStyle={styles.scroller}
+        keyboardShouldPersistTaps="always">
+        <Spinner visible={loading} textContent={'Loading...'} />
         <View style={styles.header}>
           <Text style={styles.text_header}>Welcome Back!</Text>
         </View>
@@ -152,7 +162,6 @@ function LoginScreen(props) {
                 </TouchableOpacity>
               </View>
             </Form>
-            {/* <Spinner color='red' style={styles.loading}/> */}
           </Content>
         </View>
       </ScrollView>
