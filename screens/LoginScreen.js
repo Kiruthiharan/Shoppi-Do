@@ -26,7 +26,7 @@ function LoginScreen(props) {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const emailHandler = email => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -74,12 +74,12 @@ function LoginScreen(props) {
     if (!emailValid || !passwordValid) {
       return;
     }
-    setLoading(true)
+    setLoading(true);
     auth().signOut();
     auth()
       .signInWithEmailAndPassword(enteredEmail, enteredPassword)
       .then(() => {
-        setLoading(false)
+        setLoading(false);
         props.navigation.navigate('Home');
       })
       .catch(error => {
@@ -90,10 +90,9 @@ function LoginScreen(props) {
         if (error.code === 'auth/invalid-email') {
           // console.log('That email address is invalid!');
         }
-        setLoading(false)
+        setLoading(false);
         Alert.alert(error.message);
         console.log(error.message.body);
-
       });
   };
 

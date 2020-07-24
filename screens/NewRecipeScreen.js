@@ -100,7 +100,9 @@ function NewRecipeScreen(props) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.root} keyboardShouldPersistTaps="always">
+    <ScrollView
+      contentContainerStyle={styles.root}
+      keyboardShouldPersistTaps="always">
       <TextInput
         label="Name"
         mode="outlined"

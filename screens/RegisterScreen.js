@@ -33,7 +33,7 @@ function RegisterScreen(props) {
   const [passwordValid, setPasswordValid] = useState(false);
   const [conPasswordValid, setConPasswordValid] = useState(false);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const emailHandler = email => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -99,12 +99,12 @@ function RegisterScreen(props) {
   };
 
   const registerHandler = () => {
-    setLoading(true)
+    setLoading(true);
     auth().signOut();
     auth()
       .createUserWithEmailAndPassword(enteredEmail, enteredPassword)
       .then(() => {
-        setLoading(false)
+        setLoading(false);
         console.log('User account created & signed in!');
         const user = auth().currentUser;
         const dbRef = firestore()
@@ -114,7 +114,7 @@ function RegisterScreen(props) {
         props.navigation.navigate('Login');
       })
       .catch(error => {
-        setLoading(false)
+        setLoading(false);
         if (error.code === 'auth/email-already-in-use') {
           console.log('That email address is already in use!');
         }
@@ -214,7 +214,6 @@ function RegisterScreen(props) {
                 </TouchableOpacity>
               </View>
             </Form>
-            
           </Content>
         </View>
       </ScrollView>

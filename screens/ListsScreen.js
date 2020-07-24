@@ -86,7 +86,7 @@ function ListsScreen(props) {
   }
 
   if (loading) {
-    return <Spinner visible={loading} textContent={'Loading...'} />
+    return <Spinner visible={loading} textContent={'Loading...'} />;
   }
 
   const deleteItem = id => {
@@ -169,7 +169,6 @@ function ListsScreen(props) {
       behavior="padding"
       style={styles.root}
       keyboardVerticalOffset={-300}>
-      
       {lists.length !== 0 ? (
         <FlatList data={lists} renderItem={renderGridItem} numColumns={1} />
       ) : (

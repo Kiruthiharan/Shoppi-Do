@@ -7,7 +7,7 @@ import {
   Platform,
   TouchableOpacity,
   FlatList,
-  ScrollView
+  ScrollView,
 } from 'react-native';
 import {Label, DatePicker, Fab, Card} from 'native-base';
 import {TextInput} from 'react-native-paper';
@@ -18,7 +18,6 @@ import auth from '@react-native-firebase/auth';
 import Colors from '../constants/Colors';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-
 function EditRecipeScreen(props) {
   const user = auth().currentUser;
   const recipeId = props.navigation.getParam('recipeId');
@@ -27,7 +26,7 @@ function EditRecipeScreen(props) {
   const [currentItem, setCurrentItem] = useState('');
   const [currentQty, setCurrentQty] = useState('');
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const dbRef = firestore()
     .collection('recipes')
     .doc(recipeId);
@@ -55,8 +54,8 @@ function EditRecipeScreen(props) {
       qty: currentQty,
     });
     setItems(oldItems => [...oldItems, newItem]);
-    setCurrentItem('')
-    setCurrentQty('')
+    setCurrentItem('');
+    setCurrentQty('');
   };
 
   const deleteItem = item => {
@@ -67,11 +66,15 @@ function EditRecipeScreen(props) {
   };
 
   useEffect(() => {
-    dbRef.get().then(documentSnapshot => {
-      console.log(documentSnapshot);
-      setName(documentSnapshot.data().name);
-      setRecipe(documentSnapshot.data().recipe);
-    }).then(() => setLoading(false)).catch(() => setLoading(false))
+    dbRef
+      .get()
+      .then(documentSnapshot => {
+        console.log(documentSnapshot);
+        setName(documentSnapshot.data().name);
+        setRecipe(documentSnapshot.data().recipe);
+      })
+      .then(() => setLoading(false))
+      .catch(() => setLoading(false));
 
     dbRef.collection('ingredients').onSnapshot(querySnapshot => {
       const ingredients = [];

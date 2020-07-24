@@ -201,7 +201,7 @@ function ListDetailScreen(props) {
     <ScrollView
       contentContainerStyle={styles.root}
       keyboardShouldPersistTaps="always">
-       <Spinner visible={loading} textContent={'Loading...'} />
+      <Spinner visible={loading} textContent={'Loading...'} />
       <View style={styles.lists}>
         {pendingList.length === 0 && doneList.length === 0 ? (
           <View style={styles.empty}>

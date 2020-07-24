@@ -23,20 +23,23 @@ function RecipeDetailScreen(props) {
   const recipeId = props.navigation.getParam('recipeId');
   const [recipe, setRecipe] = useState({});
   const [ingredients, setIngredients] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   const dbRef = firestore()
     .collection('recipes')
     .doc(recipeId);
 
   useEffect(() => {
-    dbRef.get().then(documentSnapshot => {
-      const recipe = {
-        name: documentSnapshot.data().name,
-        recipe: documentSnapshot.data().recipe,
-        owner: documentSnapshot.data().owner,
-      };
-      setRecipe(recipe);
-    }).then(() => setLoading(false))
+    dbRef
+      .get()
+      .then(documentSnapshot => {
+        const recipe = {
+          name: documentSnapshot.data().name,
+          recipe: documentSnapshot.data().recipe,
+          owner: documentSnapshot.data().owner,
+        };
+        setRecipe(recipe);
+      })
+      .then(() => setLoading(false));
 
     dbRef.collection('ingredients').onSnapshot(querySnapshot => {
       const ingredients = [];
@@ -48,7 +51,7 @@ function RecipeDetailScreen(props) {
         });
       });
       setIngredients(ingredients);
-    })
+    });
 
     return () => {
       console.log('list');
@@ -99,7 +102,7 @@ function RecipeDetailScreen(props) {
       keyboardShouldPersistTaps="always">
       <Spinner visible={loading} textContent={'Loading...'} />
       <Text style={styles.heading}>Instructions</Text>
-      
+
       <View style={styles.recipeContainer}>
         <Text style={styles.instructions}>{recipe.recipe}</Text>
       </View>
