@@ -13,6 +13,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import RecipeScreen from '../screens/RecipeScreen';
 import EditRecipeScreen from '../screens/EditRecipeScreen'
 import RecipeDetailScreen from '../screens/RecipeDetailScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 import Colors from '../constants/Colors';
 import Icon from 'react-native-vector-icons/Feather';
 import {SafeAreaView} from 'react-native-safe-area-view';
@@ -46,6 +47,9 @@ const ProfileNavigator = createStackNavigator(
     Profile: {
       screen: ProfileScreen,
     },
+    ChangePassword: {
+      screen: ChangePasswordScreen
+    }
   },
   {
     defaultNavigationOptions: NavOptions,

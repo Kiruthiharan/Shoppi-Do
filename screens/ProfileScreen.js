@@ -6,6 +6,7 @@ import {
   Text,
   StyleSheet,
   Image,
+  Alert,
 } from 'react-native';
 import {TextInput, RadioButton, Button} from 'react-native-paper';
 import Colors from '../constants/Colors';
@@ -89,6 +90,10 @@ function ProfileScreen(props) {
     setUsername(username);
   };
 
+  const deleteAccount = () => {
+    Alert.alert('Are you sure you want to delete')
+  }
+
   const RenderFAB = () => {
     if (!editable) {
       return (
@@ -166,6 +171,14 @@ function ProfileScreen(props) {
           </Button>
         ) : null}
       </View>
+      <View style = {styles.accountActions}>
+        <Button onPress={() => {props.navigation.navigate('ChangePassword')}} mode="outlined" style={styles.actionBtn}>
+          Change Password
+        </Button>
+        <Button onPress={deleteAccount} mode="outlined" style={styles.actionBtn}>
+          Delete Account
+        </Button>
+      </View>
     </ScrollView>
   );
 }
@@ -229,6 +242,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  accountActions: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    alignContent: 'space-between'
+  },
+  actionBtn: {
+    margin: 10
+  }
 });
 
 export default ProfileScreen;
