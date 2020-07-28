@@ -341,20 +341,22 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     margin: 5,
     padding: 10,
-    height: 45,
+    height: 40,
   },
   inputQty: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 10,
-    height: 45,
+    height: 40,
   },
   todoGrid: {
     paddingHorizontal: 5,
   },
   addBtn: {
     flexDirection: 'row',
-    marginHorizontal: 5,
+    marginHorizontal: 10,
+    height: 40,
+    marginTop: 5,
+    alignSelf: 'center'
   },
   doneItem: {
     textDecorationLine: 'line-through',

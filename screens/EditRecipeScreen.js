@@ -3,14 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Platform,
   TouchableOpacity,
   FlatList,
   ScrollView,
 } from 'react-native';
 import {Label, DatePicker, Fab, Card} from 'native-base';
-import {TextInput} from 'react-native-paper';
+import {TextInput, Button} from 'react-native-paper';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
@@ -119,6 +118,17 @@ function EditRecipeScreen(props) {
     props.navigation.navigate('Recipes');
   };
 
+  const deleteRecipe = () => {
+    dbRef
+      .delete()
+      .then(() => {
+        props.navigation.navigate('Recipes');
+      })
+      .catch(error => {
+        props.navigation.navigate('Recipes');
+      });
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.root}>
       <Spinner visible={loading} textContent={'Loading...'} />
@@ -162,6 +172,13 @@ function EditRecipeScreen(props) {
       </View>
 
       <FlatList data={items} renderItem={renderRecipeItem} numColumns={1} />
+      <Button
+        onPress={deleteRecipe}
+        style={styles.deleteBtn}
+        icon="minus"
+        color={Colors.warningColor}>
+        Delete Recipe
+      </Button>
       <Fab
         style={{backgroundColor: Colors.primaryColor}}
         position="bottomRight"
@@ -202,6 +219,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
+  },
+  deleteBtn: {
+    marginVertical: 10,
   },
 });
 

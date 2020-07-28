@@ -20,8 +20,8 @@ function LoginScreen(props) {
   const [enteredEmail, setEnteredEmail] = useState('');
   const [enteredPassword, setEnteredPassword] = useState('');
 
-  const [emailValid, setEmailValid] = useState(true);
-  const [passwordValid, setPasswordValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(false);
+  const [passwordValid, setPasswordValid] = useState(false);
 
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -94,6 +94,7 @@ function LoginScreen(props) {
         Alert.alert(error.message);
         console.log(error.message.body);
       });
+    
   };
 
   return (
@@ -139,7 +140,10 @@ function LoginScreen(props) {
                 {passwordError}
               </HelperText>
               <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={loginHandler} activeOpacity={0.3}>
+                <TouchableOpacity
+                  onPress={loginHandler}
+                  activeOpacity={0.3}
+                  disabled={!(emailValid && passwordValid)}>
                   <LinearGradient
                     start={{x: 0, y: 0}}
                     end={{x: 1, y: 0}}
