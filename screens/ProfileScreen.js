@@ -12,7 +12,7 @@ import {TextInput, RadioButton, Button} from 'react-native-paper';
 import Colors from '../constants/Colors';
 import {DatePicker, Fab} from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { firebase } from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -90,9 +90,31 @@ function ProfileScreen(props) {
     setUsername(username);
   };
 
-  const deleteAccount = () => {
-    Alert.alert('Are you sure you want to delete')
-  }
+  const deleteAccount = () => {s
+    setLoading(true)
+    Alert.alert(
+      'Are you sure!',
+      'Are you sure you want to delete your account? ',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancelled'),
+          style: 'cancel',
+        },
+        {text: 'Ok', onPress: () => {
+          firebase.auth().currentUser.delete().then(function () {
+            console.log('delete successful?')
+            setLoading(false)
+            props.navigation.navigate('Auth')
+          }).catch(function (error) {
+            setLoading(false)
+            Alert.alert(error)
+          })
+        }},
+      ],
+      {cancelable: false},
+    );
+  };
 
   const RenderFAB = () => {
     if (!editable) {
@@ -120,6 +142,7 @@ function ProfileScreen(props) {
     <ScrollView
       contentContainerStyle={styles.root}
       keyboardShouldPersistTaps="always">
+      
       <RenderFAB />
       <Spinner visible={loading} textContent={'Loading...'} />
       <View style={styles.inputContainer}>
@@ -171,11 +194,20 @@ function ProfileScreen(props) {
           </Button>
         ) : null}
       </View>
-      <View style = {styles.accountActions}>
-        <Button onPress={() => {props.navigation.navigate('ChangePassword')}} mode="outlined" style={styles.actionBtn}>
+      <View style={styles.accountActions}>
+        <Button
+          onPress={() => {
+            props.navigation.navigate('ChangePassword');
+          }}
+          mode="outlined"
+          style={styles.actionBtn}>
           Change Password
         </Button>
-        <Button onPress={deleteAccount} mode="outlined" style={styles.actionBtn}>
+        <Button
+          onPress={deleteAccount}
+          mode="outlined"
+          style={styles.actionBtn}
+          color={Colors.warningColor}>
           Delete Account
         </Button>
       </View>
@@ -245,11 +277,12 @@ const styles = StyleSheet.create({
   accountActions: {
     flexDirection: 'column',
     justifyContent: 'space-around',
-    alignContent: 'space-between'
+    alignContent: 'space-between',
+    marginTop: 20
   },
   actionBtn: {
-    margin: 10
-  }
+    margin: 10,
+  },
 });
 
 export default ProfileScreen;

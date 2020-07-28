@@ -54,7 +54,7 @@ function RegisterScreen(props) {
     if (password.length === 0) {
       setPasswordValid(false);
       setPasswordError('Password cannot be empty');
-    } else if (password.length < 4) {
+    } else if (password.length < 7) {
       setPasswordValid(false);
       setPasswordError('Password too short');
     } else {
