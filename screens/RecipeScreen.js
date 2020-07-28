@@ -26,6 +26,8 @@ function RecipeScreen(props) {
   const [remainders, setRemainders] = useState([]);
   const dbRef = firestore().collection('recipes');
 
+  let listColor = [Colors.yellowGradient,Colors.blueGradient, Colors.purpleGradient,Colors.greenGradient];
+
   useEffect(() => {
     return dbRef.onSnapshot(querySnapshot => {
       const remainders = [];
@@ -63,7 +65,7 @@ function RecipeScreen(props) {
         <LinearGradient
           end={{x: 0, y: 0}}
           start={{x: 1, y: 1}}
-          colors={['#F02FC2', '#6094EA']}
+          colors={listColor[Math.floor(Math.random() *4)]}
           style={styles.linearGradient}>
           <View>
             <Text style={styles.title}>{itemData.item.name.toUpperCase()}</Text>
