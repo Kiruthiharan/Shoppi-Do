@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
+import NetInfo from "@react-native-community/netinfo";
 import Colors from '../constants/Colors';
 import {Content, Form, Item, Label, Input} from 'native-base';
 import {HelperText} from 'react-native-paper';
@@ -73,6 +74,15 @@ function LoginScreen(props) {
     if (!emailValid || !passwordValid) {
       return;
     }
+
+    NetInfo.fetch().then(state => {
+      if (state.isConnected === false) {
+        Alert.alert("No internet connection available");
+        return;
+      }
+    });
+
+
     setLoading(true);
     auth().signOut();
     auth()
