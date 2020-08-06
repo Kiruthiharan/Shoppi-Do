@@ -164,7 +164,11 @@ function RegisterScreen(props) {
               </HelperText>
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Password</Label>
-                <Input onChangeText={passwordHandler} value={enteredPassword} />
+                <Input
+                  secureTextEntry={true}
+                  onChangeText={passwordHandler}
+                  value={enteredPassword}
+                />
               </Item>
               <HelperText
                 style={styles.helper}
@@ -175,6 +179,7 @@ function RegisterScreen(props) {
               <Item floatingLabel error={false}>
                 <Label style={styles.label}>Confirm Password</Label>
                 <Input
+                  secureTextEntry={true}
                   onChangeText={confirmPasswordHandler}
                   value={confirmPassword}
                 />

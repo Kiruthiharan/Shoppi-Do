@@ -12,7 +12,7 @@ import {TextInput, RadioButton, Button} from 'react-native-paper';
 import Colors from '../constants/Colors';
 import {DatePicker, Fab} from 'native-base';
 import Icon from 'react-native-vector-icons/Feather';
-import firestore, { firebase } from '@react-native-firebase/firestore';
+import firestore, {firebase} from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
@@ -27,11 +27,12 @@ function ProfileScreen(props) {
   const [gender, setGender] = useState('');
   const [loading, setLoading] = useState(true);
 
-  const dbRef = firestore()
-    .collection('users')
-    .doc(user.uid);
+  var dbRef;
 
   useEffect(() => {
+    dbRef = firestore()
+    .collection('users')
+    .doc(user.uid);
     getFromDb();
     return () => {
       console.log('list');
@@ -90,8 +91,7 @@ function ProfileScreen(props) {
     setUsername(username);
   };
 
-  const deleteAccount = () => {s
-    setLoading(true)
+  async function deleteAccount() {
     Alert.alert(
       'Are you sure!',
       'Are you sure you want to delete your account? ',
@@ -101,20 +101,48 @@ function ProfileScreen(props) {
           onPress: () => console.log('Cancelled'),
           style: 'cancel',
         },
-        {text: 'Ok', onPress: () => {
-          firebase.auth().currentUser.delete().then(function () {
-            console.log('delete successful?')
-            setLoading(false)
-            props.navigation.navigate('Auth')
-          }).catch(function (error) {
-            setLoading(false)
-            Alert.alert(error)
-          })
-        }},
+        {
+          text: 'Ok',
+          onPress: async function() {
+            setLoading(true);
+            var user = firebase.auth().currentUser;
+            var userId = user.uid;
+            await firebase
+              .firestore()
+              .collection('users')
+              .doc(userId)
+              .delete();
+            await firebase
+              .firestore()
+              .collection('recipes')
+              .where('owner', '==', userId)
+              .get()
+              .then(querySnapshot => {
+                querySnapshot.forEach(query => {
+                  firebase
+                    .firestore()
+                    .collection('recipes')
+                    .doc(query.id)
+                    .delete();
+                });
+              });
+            await user
+              .delete()
+              .then(function() {
+                console.log('delete successful?');
+                setLoading(false);
+                props.navigation.navigate('Auth');
+              })
+              .catch(function(error) {
+                setLoading(false);
+                Alert.alert(error);
+              });
+          },
+        },
       ],
       {cancelable: false},
     );
-  };
+  }
 
   const RenderFAB = () => {
     if (!editable) {
@@ -142,7 +170,6 @@ function ProfileScreen(props) {
     <ScrollView
       contentContainerStyle={styles.root}
       keyboardShouldPersistTaps="always">
-      
       <RenderFAB />
       <Spinner visible={loading} textContent={'Loading...'} />
       <View style={styles.inputContainer}>
@@ -278,7 +305,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignContent: 'space-between',
-    marginTop: 20
+    marginTop: 20,
   },
   actionBtn: {
     margin: 10,

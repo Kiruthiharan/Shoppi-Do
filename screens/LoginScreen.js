@@ -94,7 +94,6 @@ function LoginScreen(props) {
         Alert.alert(error.message);
         console.log(error.message.body);
       });
-    
   };
 
   return (
@@ -108,6 +107,8 @@ function LoginScreen(props) {
         <Spinner visible={loading} textContent={'Loading...'} />
         <View style={styles.header}>
           <Text style={styles.text_header}>Welcome Back!</Text>
+          <Text style={styles.text_header}>ShoppiDo by Kiruthiharan</Text>
+          <Text style={styles.text_header}>17000866</Text>
         </View>
 
         <View style={styles.footer}>
@@ -155,10 +156,7 @@ function LoginScreen(props) {
               </View>
               <View>
                 <TouchableOpacity
-                  onPress={() => props.navigation.navigate('Register')}
-                  disabled={
-                    enteredPassword.length === 0 || enteredEmail.length === 0
-                  }>
+                  onPress={() => props.navigation.navigate('Register')}>
                   <Text style={styles.registerContainer}>
                     New here? <Text style={styles.register}> Register</Text>
                   </Text>
