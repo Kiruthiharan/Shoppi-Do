@@ -104,7 +104,7 @@ function LoginScreen(props) {
       <ScrollView
         contentContainerStyle={styles.scroller}
         keyboardShouldPersistTaps="always">
-        <Spinner visible={loading} textContent={'Loading...'} />
+        <Spinner visible={loading} textContent={'Logging In...'} />
         <View style={styles.header}>
           <Text style={styles.text_header}>Welcome Back!</Text>
           <Text style={styles.text_header}>ShoppiDo by Kiruthiharan</Text>

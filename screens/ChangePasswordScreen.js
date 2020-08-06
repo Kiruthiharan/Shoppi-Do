@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, Text, StyleSheet, Alert, ScrollView} from 'react-native';
 import {TextInput, Button, HelperText} from 'react-native-paper';
 import {firebase} from '@react-native-firebase/firestore';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -100,8 +100,8 @@ const ChangePasswordScreen = props => {
   };
 
   return (
-    <View style={styles.root}>
-      <Spinner visible={loading} textContent={'Loading...'} />
+    <ScrollView contentContainerStyle={styles.root} keyboardShouldPersistTaps="always">
+      <Spinner visible={loading} textContent={'Changing Password...'} />
       <Text style={styles.heading}>CHANGE PASSWORD</Text>
       <TextInput
         mode="outlined"
@@ -143,7 +143,7 @@ const ChangePasswordScreen = props => {
         disabled={!(oldValid && newValid && conValid)}>
         Change Password
       </Button>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -160,14 +160,17 @@ const styles = StyleSheet.create({
   },
   heading: {
     alignSelf: 'center',
-    fontSize: 24,
+    fontSize: 22,
     margin: 20,
   },
   input: {
     marginHorizontal: 35,
+    width: 300,
+    height: 50,
+    alignSelf: 'center'
   },
   helper: {
-    marginHorizontal: 25,
+    marginHorizontal: 45,
   },
   btn: {
     margin: 20,

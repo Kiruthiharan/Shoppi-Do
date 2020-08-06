@@ -31,8 +31,8 @@ function ProfileScreen(props) {
 
   useEffect(() => {
     dbRef = firestore()
-    .collection('users')
-    .doc(user.uid);
+      .collection('users')
+      .doc(user.uid);
     getFromDb();
     return () => {
       console.log('list');
@@ -61,6 +61,9 @@ function ProfileScreen(props) {
   };
 
   const saveToDb = () => {
+    dbRef = firestore()
+      .collection('users')
+      .doc(user.uid);
     dbRef.update({
       username: username,
       contact: contact,
@@ -71,6 +74,9 @@ function ProfileScreen(props) {
   };
 
   const revertChanges = () => {
+    dbRef = firestore()
+    .collection('users')
+    .doc(user.uid);
     getFromDb();
     setEditable(!editable);
   };
@@ -97,12 +103,12 @@ function ProfileScreen(props) {
       'Are you sure you want to delete your account? ',
       [
         {
-          text: 'Cancel',
+          text: 'No',
           onPress: () => console.log('Cancelled'),
           style: 'cancel',
         },
         {
-          text: 'Ok',
+          text: 'Yes',
           onPress: async function() {
             setLoading(true);
             var user = firebase.auth().currentUser;

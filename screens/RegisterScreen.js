@@ -135,7 +135,7 @@ function RegisterScreen(props) {
       <ScrollView
         contentContainerStyle={styles.scroller}
         keyboardShouldPersistTaps="always">
-        <Spinner visible={loading} textContent={'Loading...'} />
+        <Spinner visible={loading} textContent={'Registering...'} />
         <View style={styles.header}>
           <Text style={styles.text_header}>Get on Board!</Text>
         </View>
