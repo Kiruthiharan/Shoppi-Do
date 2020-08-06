@@ -7,11 +7,9 @@ import {
   TouchableHighlight,
   FlatList,
   KeyboardAvoidingView,
-  Alert,
 } from 'react-native';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
-import FAB from '../components/UI/FAB';
 
 import LinearGradient from 'react-native-linear-gradient';
 import Swipeable from 'react-native-swipeable-row';
@@ -25,7 +23,6 @@ import NewList from '../components/NewList';
 import EditList from '../components/EditList';
 import Colors from '../constants/Colors';
 import {Fab, Icon} from 'native-base';
-import {ActivityIndicator} from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 function ListsScreen(props) {

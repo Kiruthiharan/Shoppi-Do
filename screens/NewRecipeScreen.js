@@ -3,12 +3,10 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
-  Platform,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {Label, DatePicker, Fab, Card} from 'native-base';
+import {Fab, Card} from 'native-base';
 import {TextInput} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
@@ -41,7 +39,7 @@ function NewRecipeScreen(props) {
     setCurrentQty(qty);
   };
 
-  const handleItemList = item => {
+  const handleItemList = () => {
     const newItem = {id: Math.random(), item: currentItem, qty: currentQty};
     setItems(oldItems => [...oldItems, newItem]);
     setCurrentItem('');

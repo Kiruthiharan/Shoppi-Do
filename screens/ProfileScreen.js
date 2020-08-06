@@ -2,10 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   View,
-  KeyboardAvoidingView,
   Text,
   StyleSheet,
-  Image,
   Alert,
 } from 'react-native';
 import {TextInput, RadioButton, Button} from 'react-native-paper';

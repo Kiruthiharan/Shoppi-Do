@@ -5,16 +5,15 @@ import {
   KeyboardAvoidingView,
   Text,
   StyleSheet,
-  Button,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import LinearGradient from 'react-native-linear-gradient';
 import Colors from '../constants/Colors';
-import {Content, Form, Item, Label, Icon, Input} from 'native-base';
+import {Content, Form, Item, Label, Input} from 'native-base';
 import firestore from '@react-native-firebase/firestore';
-import {HelperText, TextInput} from 'react-native-paper';
+import {HelperText} from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 function RegisterScreen(props) {

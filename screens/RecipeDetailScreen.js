@@ -3,19 +3,13 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform,
-  TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {Label, DatePicker, Fab, Card} from 'native-base';
-import {TextInput, FAB, Button} from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Icon from 'react-native-vector-icons/Feather';
+import {Button} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {FlatList} from 'react-native-gesture-handler';
 import {ListItem} from 'react-native-elements';
-import Colors from '../constants/Colors';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 function RecipeDetailScreen(props) {

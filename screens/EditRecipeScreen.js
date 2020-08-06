@@ -3,14 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  Platform,
   TouchableOpacity,
   FlatList,
   ScrollView,
 } from 'react-native';
-import {Label, DatePicker, Fab, Card} from 'native-base';
+import {Fab, Card} from 'native-base';
 import {TextInput, Button} from 'react-native-paper';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -124,7 +122,7 @@ function EditRecipeScreen(props) {
       .then(() => {
         props.navigation.navigate('Recipes');
       })
-      .catch(error => {
+      .catch(() => {
         props.navigation.navigate('Recipes');
       });
   };

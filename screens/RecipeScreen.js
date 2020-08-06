@@ -2,26 +2,22 @@ import React, {useState, useEffect} from 'react';
 import {
   ScrollView,
   View,
-  KeyboardAvoidingView,
   Text,
   StyleSheet,
-  Button,
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import {Card, Fab} from 'native-base';
+import {Fab} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import LinearGradient from 'react-native-linear-gradient';
-import {Content, Form, Label, Icon, Input} from 'native-base';
-import {ListItem} from 'react-native-elements';
+import {Icon} from 'native-base';
 import Colors from '../constants/Colors';
 import {HeaderButtons, Item} from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 function RecipeScreen(props) {
-  const user = auth().currentUser;
   const [loading, setLoading] = useState(true);
   const [remainders, setRemainders] = useState([]);
   const dbRef = firestore().collection('recipes');
